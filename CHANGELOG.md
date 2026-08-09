@@ -6,6 +6,19 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.2.0](https://github.com/lividlabs/codefall-plugin/compare/0.1.1...0.2.0) (2026-08-09)
+
+
+### Features
+
+* ask the stack question as supported options plus an explicit exit ([22a3d99](https://github.com/lividlabs/codefall-plugin/commit/22a3d9911589f572e79bfd7e680aad0b1658a7dc))
+* stack question offers supported profiles plus an explicit exit ([f9554f3](https://github.com/lividlabs/codefall-plugin/commit/f9554f3c884e1edfc6e3880ffacd0ecfb4452788))
+
+
+### Bug Fixes
+
+* make releases actually gate what installs receive ([df1fba5](https://github.com/lividlabs/codefall-plugin/commit/df1fba5b7ca137eac57c8db8a63b747d40ba1a15))
+
 ## [0.1.1](https://github.com/lividlabs/codefall-plugin/compare/v0.1.0...v0.1.1) (2026-08-09)
 
 ### Bug Fixes
