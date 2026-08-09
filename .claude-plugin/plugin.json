@@ -1,7 +1,7 @@
 {
   "name": "codefall",
   "description": "Codefall — a toolkit of verb-named skills for Claude Code.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Dave Jensen",
     "email": "david@jensen47.com"
