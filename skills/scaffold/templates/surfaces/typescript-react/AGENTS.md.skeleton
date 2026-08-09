@@ -1,0 +1,46 @@
+# <package / app name>
+
+<One line: what this surface is.>
+
+## Applicable ADRs
+
+The why lives in the ADRs. This file is the operative rules only — never restate the reasoning here.
+
+- [ADR-001 Clean Architecture](<path>/docs/adrs/ADR-001-clean-architecture.md) ·
+  [ADR-002 Package-by-component](<path>/docs/adrs/ADR-002-package-by-component.md) ·
+  [ADR-003 Dependency Injection](<path>/docs/adrs/ADR-003-dependency-injection.md) ·
+  [ADR-004 Frontend state](<path>/docs/adrs/ADR-004-frontend-state.md) ·
+  [ADR-005 Boundary enforcement](<path>/docs/adrs/ADR-005-boundary-enforcement.md)
+- <plus any surface-specific ADRs>
+
+## Structure
+
+- Package-by-component: capabilities as folders under `src/<component>/`, each fronted by `index.ts`.
+- Clean layers nest **inside** a component: `domain/` `application/` `infrastructure/` `presentation/`.
+- Shared technical modules under `src/shared/` (each its own facade); shared UI/kit is its own package.
+
+## Layer rules
+
+- Dependencies point inward only. Interfaces live in `application/` with the use cases; `domain/` =
+  entities + value objects + errors.
+- Controllers/handlers are thin; use cases never see delivery types.
+
+## DI
+
+- Inversify; inject interfaces only; `Thing` / `<Qualifier>Thing` naming; tokens in `types.ts`
+  (`TYPES`). Rebind to mocks in tests.
+- <frontend only> Container wires logic; the query client + Zustand stores stay idiomatic (not in the
+  container); reach the container via `useInjection`.
+
+## State  <frontend only>
+
+- Server → TanStack Query · navigation → the router · shared client → Zustand · local → `useState`.
+  Never mirror server or navigation state into Zustand.
+
+## Enforcement
+
+- `index.ts` facades + `eslint-plugin-boundaries`. Don't import past a component's facade.
+
+## Gotchas
+
+- <surface-specific things a contributor must know>

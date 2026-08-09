@@ -1,0 +1,13 @@
+{
+  "name": "codefall",
+  "description": "Codefall — a toolkit of verb-named skills for Claude Code.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Dave Jensen",
+    "email": "david@jensen47.com"
+  },
+  "homepage": "https://github.com/lividlabs/codefall-plugin",
+  "repository": "https://github.com/lividlabs/codefall-plugin",
+  "license": "MIT AND 0BSD",
+  "keywords": ["scaffold", "codegen", "workflow"]
+}

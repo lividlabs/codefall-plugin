@@ -1,0 +1,14 @@
+{
+  "name": "codefall",
+  "owner": {
+    "name": "Livid Labs",
+    "url": "https://github.com/lividlabs"
+  },
+  "plugins": [
+    {
+      "name": "codefall",
+      "source": "./",
+      "description": "Codefall — a toolkit of verb-named skills for Claude Code."
+    }
+  ]
+}
