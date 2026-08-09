@@ -88,6 +88,19 @@ Native ships `android/` and `ios/` empty.
 Ask the user to **describe the project in a few sentences**: what it does, what surfaces it has, what
 it runs on. Then decompose it into surfaces and match each one against the catalog.
 
+**Ask for prose, not a menu.** Do not present the language or stack as a multiple-choice question.
+You already know the catalog before you ask, so a menu can only do one of two things: list the
+supported profiles, which tells the user what to say rather than learning what they need; or list
+unsupported ones, which offers a choice you would then refuse.
+
+**Never offer an option you would reject.** An option annotated "this is unsupported, I would have to
+stop" is not a choice — it is a trap with extra steps. If refusing is the outcome for some answer,
+that answer does not belong on the list. This applies to every question in this skill, not just this
+one.
+
+If the description turns out to name an unsupported surface, refuse in prose, per the rules below.
+Refusal is something you say after listening, never an item the user can pick.
+
 Do the decomposition explicitly — it is the step that decides everything downstream.
 
 **A surface is defined by where domain logic lives, not by what languages are present.** A language
@@ -152,12 +165,20 @@ have the user confirm it before writing.
 ### 1. Interview
 
 The templates deliberately don't decide three things — they are per-project calls, and they change
-what gets emitted. Ask; do not guess. Batch the questions rather than interrogating one at a time,
-and offer a recommendation with each.
+what gets emitted. Ask; do not guess. Batch the questions rather than interrogating one at a time.
 
-1. **App topology** — how many apps, and monorepo or single? Surfaces are already known from step 0;
-   this is how they're laid out on disk. Drives directory layout and, per ADR-003, how many
-   composition roots exist — and therefore how many `AGENTS.md` files.
+**Recommend only what an ADR supports.** Where a decision traces to an ADR, say so and name the
+recommendation — that is the ADR doing its job. Where Codefall has no stance, present the options
+flat, say plainly that there is no house opinion, and let the user choose. A "(Recommended)" label
+with no ADR behind it invents an opinion this project does not hold, and the user cannot tell the
+difference between a considered default and one you made up on the spot.
+
+1. **App topology** — how many apps? Mostly answered already by step 0's surfaces. Per ADR-003 each
+   app gets its own composition root, and therefore its own `AGENTS.md`.
+   Codefall has **no opinion on repo layout** — monorepo or separate repos, workspaces or a single
+   package. No ADR covers it, so do not recommend one and do not label an option "Recommended". If
+   there is only one app, default to a single package without asking. If there is more than one, ask
+   where the user wants them, say there is no house preference, and follow the answer.
 2. **Bounded contexts** — what are the capabilities? These become the top-level component folders
    and make the structure scream the domain. Push for **coarse** boundaries: ADR-002 says start
    coarse and split, because re-slicing an existing boundary is the expensive case. Two or three is
