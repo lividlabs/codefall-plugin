@@ -6,26 +6,36 @@
       "package-name": "codefall",
       "changelog-path": "CHANGELOG.md",
       "include-component-in-tag": false,
-      "include-v-in-tag": false,
       "extra-files": [
         {
           "type": "json",
           "path": ".claude-plugin/plugin.json",
           "jsonpath": "$.version"
-        },
-        {
-          "type": "json",
-          "path": ".claude-plugin/marketplace.json",
-          "jsonpath": "$.plugins[0].source.ref"
         }
       ]
     }
   },
   "changelog-sections": [
-    { "type": "feat", "section": "Features" },
-    { "type": "fix", "section": "Bug Fixes" },
-    { "type": "docs", "section": "Documentation" },
-    { "type": "refactor", "section": "Refactoring" },
-    { "type": "chore", "section": "Chores", "hidden": true }
+    {
+      "type": "feat",
+      "section": "Features"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes"
+    },
+    {
+      "type": "docs",
+      "section": "Documentation"
+    },
+    {
+      "type": "refactor",
+      "section": "Refactoring"
+    },
+    {
+      "type": "chore",
+      "section": "Chores",
+      "hidden": true
+    }
   ]
 }
