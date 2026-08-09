@@ -20,6 +20,31 @@ Scaffold's minimum output is **documentation** — the ADRs that fix the archite
 Scaffolding is not implementing. Once the decisions are recorded and the project is green and empty,
 stop. Features go through `specify` → `architect` → `implement`.
 
+## Scope — how, not what
+
+Scaffold decides **how this project will be built**. It does not decide **what it does**.
+
+| In scope | Out of scope |
+| --- | --- |
+| Layering, the dependency rule, where interfaces live | What the features are, or how they work |
+| DI, composition roots, naming | The data model, schemas, entity fields |
+| Boundary enforcement, lint, CI | API design, endpoints, message shapes |
+| Rendering strategy, topology, depth | Business rules, workflows, edge cases |
+
+This is a hard line, and the most common way this skill goes wrong is crossing it. You are not
+designing the application. Do not propose entities, sketch a schema, reason about how a feature will
+behave, or ask questions whose only purpose is to understand the product. If the user describes what
+they're building, that is context for matching a profile — not an invitation to design it.
+
+**Not knowing the domain yet is normal and fine.** A project can be scaffolded before anyone knows
+what its capabilities are; ADR-002 already handles that case by preferring ports-and-adapters when
+boundaries are unknown. Ask once, accept "not yet" the first time it is said, and move on.
+
+**Keep the session short.** Prefer defaults over questions, accept vague answers, and stop asking the
+moment you have enough to emit the docs. A scaffold that takes four exchanges is working correctly.
+If you find yourself on a long thread about how the thing will work, you are in `specify` and
+`architect` territory — say so, and finish scaffolding.
+
 Template paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}/skills/scaffold/templates/`.
 Resolve them against that root — they are not relative to the user's project.
 
@@ -184,7 +209,9 @@ have the user confirm it before writing.
 ### 1. Interview
 
 The templates deliberately don't decide three things — they are per-project calls, and they change
-what gets emitted. Ask; do not guess. Batch the questions rather than interrogating one at a time.
+what gets emitted. Ask; do not guess. **Batch all of it into one round of questions**, not a
+conversation. Every item below has a workable default, so a user who answers none of them still gets
+a correct scaffold.
 
 **Recommend only what an ADR supports.** Where a decision traces to an ADR, say so and name the
 recommendation — that is the ADR doing its job. Where Codefall has no stance, present the options
@@ -198,10 +225,13 @@ difference between a considered default and one you made up on the spot.
    package. No ADR covers it, so do not recommend one and do not label an option "Recommended". If
    there is only one app, default to a single package without asking. If there is more than one, ask
    where the user wants them, say there is no house preference, and follow the answer.
-2. **Bounded contexts** — what are the capabilities? These become the top-level component folders
-   and make the structure scream the domain. Push for **coarse** boundaries: ADR-002 says start
-   coarse and split, because re-slicing an existing boundary is the expensive case. Two or three is
-   a fine start. If the user genuinely doesn't know yet, that is itself the answer — see #3.
+2. **Bounded contexts** — do the capabilities already have obvious names? These become the top-level
+   component folders. Ask **once**, in one sentence, and offer "not yet" as a first-class answer.
+   If the user names some, keep them **coarse** — ADR-002 says start coarse and split, because
+   re-slicing an existing boundary is the expensive case, and two or three is a fine start.
+   If the answer is "not yet", vague, or hesitant: **take it and move to #3.** Do not push, do not
+   suggest candidates, do not ask them to think it through. Codefall has an answer for exactly this
+   case and it is a good one — the project does not need domains to be scaffolded.
 3. **Per-surface architecture** — package-by-component (the default) or ports-and-adapters?
    ADR-002 names three conditions favoring p&a: boundaries genuinely unknown, one cohesive domain
    rather than separable capabilities, or no service-extraction goal. If the answer to #2 was "don't
@@ -209,8 +239,11 @@ difference between a considered default and one you made up on the spot.
 4. **Depth** — docs only, docs + project files, or a runnable skeleton? Default to **docs only**
    unless the user wants more. See [Depth](#depth).
 
-Also settle the project name and destination. Never scaffold into a non-empty directory without
-saying so first, and never overwrite an existing path.
+**Ask where it goes.** The destination is the user's to name, and the current working directory is
+not a default — they may be standing in an unrelated repo. Include it in the same batch of
+questions, and only then check the chosen target: never scaffold into a non-empty directory without
+saying so first, and never overwrite an existing path. A warning about a directory the user never
+nominated is noise.
 
 ### 2. Emit the docs — always
 
