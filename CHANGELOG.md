@@ -6,6 +6,14 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.2.1](https://github.com/lividlabs/codefall-plugin/compare/0.2.0...v0.2.1) (2026-08-09)
+
+
+### Bug Fixes
+
+* restore plugin installs broken by git-subdir pinning ([ba46971](https://github.com/lividlabs/codefall-plugin/commit/ba469718655d02e5658d90c7f8b9e505be7edb28))
+* restore plugin installs broken by git-subdir pinning ([04afd41](https://github.com/lividlabs/codefall-plugin/commit/04afd414928e1571f9643ed776b79e6d2320a8b3))
+
 ## [0.2.0](https://github.com/lividlabs/codefall-plugin/compare/0.1.1...0.2.0) (2026-08-09)
 
 
