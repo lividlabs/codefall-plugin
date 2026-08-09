@@ -7,13 +7,8 @@
   "plugins": [
     {
       "name": "codefall",
-      "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/lividlabs/codefall-plugin.git",
-        "path": ".",
-        "ref": "0.2.0"
-      },
-      "description": "Codefall — a toolkit of verb-named skills for Claude Code."
+      "source": "./",
+      "description": "Codefall \u2014 a toolkit of verb-named skills for Claude Code."
     }
   ]
 }
