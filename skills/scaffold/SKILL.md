@@ -86,22 +86,11 @@ Native ships `android/` and `ios/` empty.
 ### 0. Describe and match — the gate
 
 Ask the user to **describe the project in a few sentences**: what it does, what surfaces it has, what
-it runs on. Then decompose it into surfaces and match each one against the catalog.
+it runs on. Decompose that into surfaces, then confirm each one with the stack question below.
 
-**Ask for prose, not a menu.** Do not present the language or stack as a multiple-choice question.
-You already know the catalog before you ask, so a menu can only do one of two things: list the
-supported profiles, which tells the user what to say rather than learning what they need; or list
-unsupported ones, which offers a choice you would then refuse.
+#### Decomposition
 
-**Never offer an option you would reject.** An option annotated "this is unsupported, I would have to
-stop" is not a choice — it is a trap with extra steps. If refusing is the outcome for some answer,
-that answer does not belong on the list. This applies to every question in this skill, not just this
-one.
-
-If the description turns out to name an unsupported surface, refuse in prose, per the rules below.
-Refusal is something you say after listening, never an item the user can pick.
-
-Do the decomposition explicitly — it is the step that decides everything downstream.
+Do this explicitly — it is the step that decides everything downstream.
 
 **A surface is defined by where domain logic lives, not by what languages are present.** A language
 that only implements gateways is not a surface; it is the outer ring of a surface that already has a
@@ -124,6 +113,36 @@ the file listing.
 
 A Flutter app with a Go API is two surfaces — both sides own domain logic. A plain Node service is
 one.
+
+#### The stack question
+
+Offer **one option per supported profile**, and nothing else:
+
+- `typescript-react` — TypeScript/Node backends, React frontends (web and Native), and Tauri or
+  Electron apps whose native side is only wiring
+- **None of these**
+
+That list is generated from the catalog. When a profile moves from planned to supported it gains an
+option; until then it has none.
+
+**Never list a planned profile as an option.** `rust-native`, `python`, `dart-flutter` and the rest
+are not available, so offering them and then refusing spends the user's choice on nothing. An option
+annotated "this is unsupported, I would have to stop" is not a choice — it is a trap with extra
+steps. This holds for every question in this skill, not just this one.
+
+**"None of these" is the deliberate exit**, and the one option that leads to a stop. That is fine
+because it is honest about being an exit — the user picks it knowing what it means, rather than
+discovering it after choosing something that looked available.
+
+When the user picks it, say plainly:
+
+> Sorry — we don't support your stack yet.
+
+Then name what *is* supported, offer to record the request, and stop. Do not ask follow-up questions
+hunting for a way in, and do not steer the user toward a supported profile they didn't pick.
+
+If the project has more than one surface, ask the question once per surface, each with the same
+options.
 
 **If every surface matches a supported profile**, name the profiles you matched and continue.
 
