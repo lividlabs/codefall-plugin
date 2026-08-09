@@ -3,6 +3,11 @@ name: scaffold
 description: Start a new project on the Clean + package-by-component stance — interview for the calls a template can't make (bounded contexts, app topology, per-surface architecture), then emit ratified ADRs, scoped AGENTS.md files, and optionally the project files and boundary-lint wiring.
 argument-hint: "[project-name] [path]"
 disable-model-invocation: true
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - AskUserQuestion
 ---
 
 # Scaffold
@@ -14,6 +19,9 @@ Scaffold's minimum output is **documentation** — the ADRs that fix the archite
 
 Scaffolding is not implementing. Once the decisions are recorded and the project is green and empty,
 stop. Features go through `specify` → `architect` → `implement`.
+
+Template paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}/skills/scaffold/templates/`.
+Resolve them against that root — they are not relative to the user's project.
 
 ## The stance
 
