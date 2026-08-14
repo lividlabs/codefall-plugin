@@ -1,6 +1,6 @@
 {
   "name": "codefall",
-  "description": "Codefall — a toolkit of verb-named skills for Claude Code.",
+  "description": "Codefall — Opinionated skills for the software development lifecycle.",
   "version": "0.2.1",
   "author": {
     "name": "Dave Jensen",
