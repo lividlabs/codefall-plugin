@@ -1,9 +1,9 @@
 codefall-plugin
 ---------------
 
-A plugin for Claude Code (and, later, Codex and friends).
+**Codefall — Opinionated skills for the software development lifecycle.**
 
-Every skill in Codefall is a **verb**.
+A plugin for Claude Code (and, later, Codex and friends). Every skill is a **verb**.
 
 ## Skills
 

@@ -8,7 +8,7 @@
     {
       "name": "codefall",
       "source": "./",
-      "description": "Codefall \u2014 a toolkit of verb-named skills for Claude Code."
+      "description": "Codefall — Opinionated skills for the software development lifecycle."
     }
   ]
 }
