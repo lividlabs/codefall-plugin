@@ -6,6 +6,26 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.3.0](https://github.com/lividlabs/codefall-plugin/compare/v0.2.1...v0.3.0) (2026-08-17)
+
+
+### Features
+
+* add the go surface profile and namespace ADR identifiers ([#11](https://github.com/lividlabs/codefall-plugin/issues/11)) ([ad6e7e3](https://github.com/lividlabs/codefall-plugin/commit/ad6e7e307cd84ea3bc530bd78bf90974f7610c99))
+* gate installs on releases by pinning the marketplace to a commit ([#12](https://github.com/lividlabs/codefall-plugin/issues/12)) ([3073fcd](https://github.com/lividlabs/codefall-plugin/commit/3073fcd971252994e43c78b6a039aecff7fa7eec))
+
+
+### Bug Fixes
+
+* keep scaffold to how a project is built, not what it does ([52dcb97](https://github.com/lividlabs/codefall-plugin/commit/52dcb97b280c931803493168beb6b78e068551b9))
+* keep scaffold to how a project is built, not what it does ([adb8740](https://github.com/lividlabs/codefall-plugin/commit/adb8740f577091520a05d70f6247e46193969067))
+
+
+### Documentation
+
+* describe the plugin by what it does, not how it is named ([0a174ca](https://github.com/lividlabs/codefall-plugin/commit/0a174ca3c68bebb65d9df935b1b7edf8bd056175))
+* describe the plugin by what it does, not how it is named ([b177b4b](https://github.com/lividlabs/codefall-plugin/commit/b177b4bdfa86cae61fa26159ba274cdd2cbebae5))
+
 ## [0.2.1](https://github.com/lividlabs/codefall-plugin/compare/0.2.0...v0.2.1) (2026-08-09)
 
 
