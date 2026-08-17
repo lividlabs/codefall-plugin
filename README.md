@@ -9,7 +9,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 
 | Skill | Does | Status |
 | --- | --- | --- |
-| [`scaffold`](skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
+| [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 
 Skills are **explicitly invoked** — `/scaffold`, `/specify`, and so on. Each carries
 `disable-model-invocation: true`, so none of them fire on their own; scaffolding a project or filing
@@ -22,7 +22,7 @@ enforced**. Dependencies point inward only; the interfaces a use case needs live
 `application/`, not in `domain/`; the top level is capabilities, each behind a facade with the Clean
 layers nested inside; a composition root per app binds implementations.
 
-That core is stack-agnostic ([ADR-BASE-01, ADR-BASE-02](skills/scaffold/templates/adrs/)). Each surface adds
+That core is stack-agnostic ([ADR-BASE-01, ADR-BASE-02](plugins/codefall/skills/scaffold/templates/adrs/)). Each surface adds
 a profile supplying its own ADRs under its own prefix — `ADR-TS-01` and up for `typescript-react`,
 which is Inversify, the TanStack Query / Zustand / `useState` split, and `eslint-plugin-boundaries`;
 `ADR-GO-01` and up for `go`. Numbering restarts per profile, so two profiles never collide, and a
@@ -77,47 +77,63 @@ The verbs chain: `scaffold` makes the project, `specify` states the problem,
 
 ## Layout
 
+This repo is a **marketplace** at the root and a **plugin** in `plugins/codefall/`. The two are
+versioned independently on purpose: the catalog stays current on `main` while the entry pins the
+plugin to a released commit.
+
 ```
 .claude-plugin/
-  plugin.json         # plugin manifest
-  marketplace.json    # lets this repo be added as a marketplace directly
-skills/
-  scaffold/
-    SKILL.md
-    templates/
-      adrs/                     # stack-agnostic: ADR-BASE-01, ADR-BASE-02, _TEMPLATE
-      surfaces/
-        typescript-react/
-          PROFILE.md            # prefix, fit, visibility model, toolchain, depth notes
-          adrs/                 # ADR-TS-01..03
-          AGENTS.md.skeleton    # scoped per-surface rules doc
-        go/
-          PROFILE.md
-          adrs/                 # ADR-GO-01..03
-          AGENTS.md.skeleton
+  marketplace.json    # the catalog — pins plugins/codefall to a released commit
+plugins/
+  codefall/           # the plugin; this subtree is what gets installed
+    .claude-plugin/
+      plugin.json     # plugin manifest
+    skills/
+      scaffold/
+        SKILL.md
+        templates/
+          adrs/                     # stack-agnostic: ADR-BASE-01, ADR-BASE-02, _TEMPLATE
+          surfaces/
+            typescript-react/
+              PROFILE.md            # prefix, fit, visibility model, toolchain, depth notes
+              adrs/                 # ADR-TS-01..03
+              AGENTS.md.skeleton    # scoped per-surface rules doc
+            go/
+              PROFILE.md
+              adrs/                 # ADR-GO-01..03
+              AGENTS.md.skeleton
 ```
 
-`skills/`, `commands/`, `agents/`, and `hooks/hooks.json` are auto-discovered by
+Within the plugin, `skills/`, `commands/`, `agents/`, and `hooks/hooks.json` are auto-discovered by
 Claude Code — no manifest entries needed when adding new ones.
 
-## Install (local development)
-
-```
-/plugin marketplace add /Users/djensen/code/lividlabs/codefall-plugin
-/plugin install codefall@codefall
-```
-
-Or, once pushed:
+## Install
 
 ```
 /plugin marketplace add lividlabs/codefall-plugin
 /plugin install codefall@codefall
 ```
 
+The catalog is read from `main`, so it is always current, but the `codefall` entry is pinned to the
+commit of the most recent release. Merges to `main` do not reach installs; merging a release PR does.
+
+### Local development
+
+Point the marketplace at your checkout and install the `codefall-dev` entry, which resolves to
+`plugins/codefall/` in your working tree rather than to a published commit:
+
+```
+/plugin marketplace add /path/to/codefall-plugin
+/plugin install codefall-dev@codefall
+```
+
+Installing `codefall` from a local checkout would still fetch the pinned commit from GitHub, so use
+`codefall-dev` when you want to see your edits.
+
 ## License
 
 [MIT](LICENSE) — Copyright (c) 2026 Livid Labs, LLC, authored by Dave Jensen.
 
-The templates under `skills/scaffold/templates/`, and everything `scaffold` copies from them into
+The templates under `plugins/codefall/skills/scaffold/templates/`, and everything `scaffold` copies from them into
 your project, are additionally available under [0BSD](LICENSE): no attribution, no notice, no
 obligation. Your architecture documents are yours.
