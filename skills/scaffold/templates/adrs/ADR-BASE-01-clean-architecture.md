@@ -1,4 +1,4 @@
-# ADR-001: Clean Architecture
+# ADR-BASE-01: Clean Architecture
 
 ## Status
 
@@ -67,11 +67,11 @@ for cohesion; the dependency rule is unchanged.
 - Implementations are swappable (in-memory for tests, real for production) behind their interfaces.
 - More indirection than a plain layered app — justified by testability and boundary clarity; can
   feel heavy for trivial CRUD.
-- The rings are **conceptual**, not a mandated folder tree — ADR-002 defines how they map onto
+- The rings are **conceptual**, not a mandated folder tree — ADR-BASE-02 defines how they map onto
   directories.
 
 ## Related
 
-- ADR-002 — Package-by-component (how the layers map onto directories)
-- ADR-003 — Dependency Injection (how implementations bind to interfaces)
+- ADR-BASE-02 — Package-by-component (how the layers map onto directories)
+- The matched profile's **dependency-injection** ADR (how implementations bind to interfaces)
 - Robert C. Martin, "The Clean Architecture" (2012) and "Screaming Architecture" (2011)

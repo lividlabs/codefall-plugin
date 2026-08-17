@@ -1,4 +1,4 @@
-# ADR-005: Boundary Enforcement
+# ADR-TS-03: Boundary Enforcement
 
 ## Status
 
@@ -7,7 +7,7 @@ Accepted — <date>
 ## Context
 
 TypeScript has no `package-private` / `internal` visibility. So package-by-component's `index.ts`
-facades (ADR-002) are conventions the compiler will not enforce — and without enforcement,
+facades (ADR-BASE-02) are conventions the compiler will not enforce — and without enforcement,
 package-by-component silently degrades into "package by feature with everything public," which is the
 weaker scheme. Enforcement is what makes the boundaries real. This matters *more* in an AI-assisted
 workflow, where fast code generation drifts without hard guardrails.
@@ -49,5 +49,5 @@ workflow, where fast code generation drifts without hard guardrails.
 
 ## Related
 
-- ADR-002 — Package-by-component (the boundaries being enforced)
-- ADR-001 — Clean Architecture (the layer rule at #2)
+- ADR-BASE-02 — Package-by-component (the boundaries being enforced)
+- ADR-BASE-01 — Clean Architecture (the layer rule at #2)

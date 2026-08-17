@@ -22,9 +22,11 @@ enforced**. Dependencies point inward only; the interfaces a use case needs live
 `application/`, not in `domain/`; the top level is capabilities, each behind a facade with the Clean
 layers nested inside; a composition root per app binds implementations.
 
-That core is stack-agnostic ([ADR-001, ADR-002](skills/scaffold/templates/adrs/)). Each surface adds
-a profile supplying ADR-003 and up — for `typescript-react`, that's Inversify, the TanStack Query /
-Zustand / `useState` split, and `eslint-plugin-boundaries`.
+That core is stack-agnostic ([ADR-BASE-01, ADR-BASE-02](skills/scaffold/templates/adrs/)). Each surface adds
+a profile supplying its own ADRs under its own prefix — `ADR-TS-01` and up for `typescript-react`,
+which is Inversify, the TanStack Query / Zustand / `useState` split, and `eslint-plugin-boundaries`;
+`ADR-GO-01` and up for `go`. Numbering restarts per profile, so two profiles never collide, and a
+project's own ADRs are a separate sequence starting at `ADR-001`.
 
 ### Surfaces
 
@@ -35,14 +37,15 @@ appear in the repo.
 | Surface profile | Covers | Status |
 | --- | --- | --- |
 | `typescript-react` | TypeScript/Node backends; React frontends, web and Native — including Tauri, Electron, and RN apps whose native side is only wiring | **supported** |
+| `go` | Go services, APIs, workers, daemons, and CLIs that hold domain logic | **supported** |
 | `rust-native` | Rust services, and Tauri shells that hold domain logic | planned |
 | `kotlin-native` · `swift-native` | Android, iOS | planned |
 | `dart-flutter` | Flutter, mobile and desktop | planned |
-| `python` · `java` · `go` | backends and services | planned |
+| `python` · `java` | backends and services | planned |
 
 So a **Tauri desktop app and a React Native mobile app are both scaffoldable today**, whole, when
 their native side is boilerplate plus a few commands wrapping OS APIs. Those commands are gateway
-implementations living in the `infrastructure/` ring — per ADR-001, a Tauri `invoke`, a bridge call,
+implementations living in the `infrastructure/` ring — per ADR-BASE-01, a Tauri `invoke`, a bridge call,
 an HTTP request, and a platform channel are all just gateways, and the use case never learns which
 one it got. Rust or Kotlin in the repo doesn't make it a native surface, any more than a Postgres
 driver makes SQL one.
@@ -52,7 +55,7 @@ plus a **seam ADR** deciding which side owns the domain.
 
 React is the component model; the renderer is an outer-ring detail, so React DOM and React Native
 share one profile. What differs is toolchain — and the profile records the trap: Metro transpiles
-with Babel, not `tsc`, so ADR-003's `emitDecoratorMetadata` is inert and Inversify fails at runtime
+with Babel, not `tsc`, so ADR-TS-01's `emitDecoratorMetadata` is inert and Inversify fails at runtime
 unless `babel-plugin-transform-typescript-metadata` is added.
 
 `scaffold` asks you to describe the project, decomposes it into surfaces, and matches each against
@@ -82,12 +85,16 @@ skills/
   scaffold/
     SKILL.md
     templates/
-      adrs/                     # stack-agnostic: ADR-001, ADR-002, _TEMPLATE
+      adrs/                     # stack-agnostic: ADR-BASE-01, ADR-BASE-02, _TEMPLATE
       surfaces/
         typescript-react/
-          PROFILE.md            # fit, visibility model, toolchain, depth notes
-          adrs/                 # ADR-003..005
+          PROFILE.md            # prefix, fit, visibility model, toolchain, depth notes
+          adrs/                 # ADR-TS-01..03
           AGENTS.md.skeleton    # scoped per-surface rules doc
+        go/
+          PROFILE.md
+          adrs/                 # ADR-GO-01..03
+          AGENTS.md.skeleton
 ```
 
 `skills/`, `commands/`, `agents/`, and `hooks/hooks.json` are auto-discovered by

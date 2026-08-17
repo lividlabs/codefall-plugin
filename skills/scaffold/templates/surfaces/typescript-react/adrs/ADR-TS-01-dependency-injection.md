@@ -1,4 +1,4 @@
-# ADR-003: Dependency Injection
+# ADR-TS-01: Dependency Injection
 
 ## Status
 
@@ -6,7 +6,7 @@ Accepted — <date>
 
 ## Context
 
-Clean Architecture (ADR-001) has inner layers depend on interfaces that outer layers implement;
+Clean Architecture (ADR-BASE-01) has inner layers depend on interfaces that outer layers implement;
 something must bind adapters to those interfaces at a composition root. Options are manual wiring or
 a container. For TypeScript, **Inversify** is the mature IoC container and handles the common
 "one interface, multiple implementations, rebind in tests" case cleanly.
@@ -58,6 +58,6 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
 
 ## Related
 
-- ADR-001 — Clean Architecture (the interfaces being bound)
-- ADR-002 — Package-by-component (per-component modules the root loads)
-- ADR-004 — Frontend state (why the query client / stores stay outside the container)
+- ADR-BASE-01 — Clean Architecture (the interfaces being bound)
+- ADR-BASE-02 — Package-by-component (per-component modules the root loads)
+- ADR-TS-02 — Frontend state (why the query client / stores stay outside the container)

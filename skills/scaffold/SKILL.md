@@ -37,7 +37,7 @@ behave, or ask questions whose only purpose is to understand the product. If the
 they're building, that is context for matching a profile — not an invitation to design it.
 
 **Not knowing the domain yet is normal and fine.** A project can be scaffolded before anyone knows
-what its capabilities are; ADR-002 already handles that case by preferring ports-and-adapters when
+what its capabilities are; ADR-BASE-02 already handles that case by preferring ports-and-adapters when
 boundaries are unknown. Ask once, accept "not yet" the first time it is said, and move on.
 
 **Keep the session short.** Prefer defaults over questions, accept vague answers, and stop asking the
@@ -51,8 +51,8 @@ Resolve them against that root — they are not relative to the user's project.
 ## The stance
 
 **Pure Clean Architecture organized package-by-component**, with boundaries **mechanically
-enforced**. That core is stack-agnostic and lives in `templates/adrs/` (ADR-001, ADR-002). Each
-supported surface adds a profile under `templates/surfaces/<name>/` supplying ADR-003 and up. Read the
+enforced**. That core is stack-agnostic and lives in `templates/adrs/` (ADR-BASE-01, ADR-BASE-02). Each
+supported surface adds a profile under `templates/surfaces/<name>/` supplying its own ADRs. Read the
 ADRs before scaffolding — they are the substance of this skill, not decoration.
 
 In one paragraph: dependencies point inward only; the interfaces a use case needs live *with the use
@@ -70,13 +70,31 @@ Stack-agnostic — every project gets these:
 
 | Path | What it is |
 | --- | --- |
-| `templates/adrs/ADR-001-clean-architecture.md` | The dependency rule and the four layers |
-| `templates/adrs/ADR-002-package-by-component.md` | Top-level organization; when to prefer p&a |
+| `templates/adrs/ADR-BASE-01-clean-architecture.md` | The dependency rule and the four layers |
+| `templates/adrs/ADR-BASE-02-package-by-component.md` | Top-level organization; when to prefer p&a |
 | `templates/adrs/_TEMPLATE.md` | Thin ADR template for new decisions |
 
-Per surface, under `templates/surfaces/<name>/` — a `PROFILE.md`, an `AGENTS.md.skeleton`, and the ADRs
-from 003 up. The `typescript-react` profile supplies DI (Inversify), frontend state (TanStack Query /
-Zustand / `useState`), and boundary enforcement (`eslint-plugin-boundaries`).
+Per surface, under `templates/surfaces/<name>/` — a `PROFILE.md`, an `AGENTS.md.skeleton`, and the
+profile's own ADRs. `typescript-react` supplies DI (Inversify), frontend state (TanStack Query /
+Zustand / `useState`), and boundary enforcement (`eslint-plugin-boundaries`). `go` supplies DI
+(`samber/do`), boundary enforcement (`internal/` packages plus `depguard`), and optional values
+(`samber/mo`'s `Option`).
+
+**ADR identifiers.** Three separate namespaces, and they never interact:
+
+| Namespace | Who owns it | Examples |
+| --- | --- | --- |
+| `ADR-BASE-NN` | the stack-agnostic core in `templates/adrs/` | `ADR-BASE-01`, `ADR-BASE-02` |
+| `ADR-<PREFIX>-NN` | a surface profile, prefix declared in its `PROFILE.md` | `ADR-TS-01`, `ADR-GO-02` |
+| `ADR-NNN` | **this project's own** decisions, starting at `ADR-001` | `ADR-001` seam ADR |
+
+Numbering restarts at 01 inside each profile, so nothing coordinates across profiles and a project
+matching two of them gets `ADR-TS-01` and `ADR-GO-01` side by side with no collision. A profile that
+has no use for a concern simply doesn't ship that ADR — there is no gap to explain.
+
+**Project ADRs are a separate sequence starting at `ADR-001`**, never a continuation of the inherited
+ones. That is deliberate: the three-digit bare form marks a decision made *here*, and the prefixed
+forms mark stance inherited from Codefall. A reader can tell them apart at a glance.
 
 These ship **Accepted**. They are this shop's decided architecture, not a menu — the project inherits
 them. Stamp a real date on each. Amend one only when the interview requires it (below); if you amend,
@@ -92,10 +110,11 @@ its domain logic lives, it is either one web surface or a web surface plus a nat
 | Surface profile | Covers | Status |
 | --- | --- | --- |
 | `typescript-react` | TypeScript/Node backends; React frontends, web and Native — including Tauri, Electron, and RN apps whose native side is only wiring | **supported** |
+| `go` | Go services, APIs, workers, daemons, and CLIs that hold domain logic | **supported** |
 | `rust-native` | Rust services, and Tauri shells that hold domain logic | planned |
 | `kotlin-native` · `swift-native` | Android, iOS | planned |
 | `dart-flutter` | Flutter, mobile and desktop | planned |
-| `python` · `java` · `go` | backends and services | planned |
+| `python` · `java` | backends and services | planned |
 
 A profile is **supported** only when `templates/surfaces/<name>/PROFILE.md` is complete. Nothing else
 counts — not a language this skill mentions, not one you know well, not one that is "basically the
@@ -110,8 +129,28 @@ Native ships `android/` and `ios/` empty.
 
 ### 0. Describe and match — the gate
 
-Ask the user to **describe the project in a few sentences**: what it does, what surfaces it has, what
-it runs on. Decompose that into surfaces, then confirm each one with the stack question below.
+Ask **one question**: what are you building, and what does it run on? A sentence or two.
+
+You need exactly enough to split the project into surfaces and match each to a profile. Nothing else
+learned in this step changes a single byte of what gets emitted.
+
+**Most projects are not defined yet, and that is the normal case.** The user is starting something.
+They do not owe you a product description, and a scaffold does not need one. Do not ask what the
+features are, what the data looks like, who the users are, or how any of it behaves.
+
+**When the user volunteers more than you asked for — and they will** — the failure to avoid is
+*engaging* with it, not *hearing* it. Name the surfaces you found and carry on; that naming is the
+acknowledgement, and it is in the only currency this skill trades in. A sentence of ordinary
+acknowledgement alongside it is fine.
+
+What is not fine: asking a follow-up about a feature, proposing entities or a schema, reasoning about
+how something will behave, or letting product detail reach the ADRs. Those turn a description into a
+design session, which is the most common way this skill fails.
+
+If something in the description will genuinely matter to `specify` or `architect`, put it in the
+decision-log's **Parking lot** and say you did. Recorded, not acted on.
+
+Decompose the answer into surfaces, then confirm each one with the stack question below.
 
 #### Decomposition
 
@@ -124,7 +163,7 @@ something on their behalf?*
 
 This is what makes a **Tauri desktop app one surface, not two.** If `src-tauri/` is stock boilerplate
 plus a handful of thin commands wrapping OS APIs — file dialogs, notifications, the tray — those
-commands are gateway implementations. Per ADR-001 they belong in the `infrastructure/` ring of the
+commands are gateway implementations. Per ADR-BASE-01 they belong in the `infrastructure/` ring of the
 TypeScript surface, and the app is plain `typescript-react`. Rust being present doesn't make it a
 Rust surface, any more than a Postgres driver makes SQL one. The same reasoning covers an Electron
 main process, a React Native native module, and a thin native wrapper around a web view.
@@ -145,6 +184,7 @@ Offer **one option per supported profile**, and nothing else:
 
 - `typescript-react` — TypeScript/Node backends, React frontends (web and Native), and Tauri or
   Electron apps whose native side is only wiring
+- `go` — Go services, APIs, workers, daemons, and CLIs
 - **None of these**
 
 That list is generated from the catalog. When a profile moves from planned to supported it gains an
@@ -175,7 +215,7 @@ options.
 Do not proceed. Specifically, do not:
 
 - substitute the nearest supported profile for the unsupported surface;
-- hand-author ADR-003/004/005 for an unsupported language from your own knowledge — the point of a
+- hand-author a profile's ADRs for an unsupported language from your own knowledge — the point of a
   profile is that those decisions were made deliberately, once, and reviewed;
 - emit a partial scaffold and note the gap in passing.
 
@@ -198,11 +238,12 @@ the boundary. Where they meet, settle:
 
 - **Which side owns the domain.** In a fat-shell Tauri app or a Flutter-plus-API project the entities
   can live on either side, or — badly — on both. Pick one and write it down.
-- **What the gateway across the seam looks like.** Per ADR-001 this is just another gateway: an
+- **What the gateway across the seam looks like.** Per ADR-BASE-01 this is just another gateway: an
   `invoke` command, an HTTP call, and a platform channel are the same shape to a use case, which
   never learns which one it got. The inner rings must not name the transport.
 
-Record the answers as a project-specific ADR (ADR-006+, from `_TEMPLATE.md`). This is the one place
+Record the answers as a project-specific ADR — `ADR-001`, the first in this project's own sequence,
+from `_TEMPLATE.md`. This is the one place
 `scaffold` writes a genuinely new decision rather than instantiating a template — so draft it, then
 have the user confirm it before writing.
 
@@ -219,23 +260,26 @@ flat, say plainly that there is no house opinion, and let the user choose. A "(R
 with no ADR behind it invents an opinion this project does not hold, and the user cannot tell the
 difference between a considered default and one you made up on the spot.
 
-1. **App topology** — how many apps? Mostly answered already by step 0's surfaces. Per ADR-003 each
-   app gets its own composition root, and therefore its own `AGENTS.md`.
+1. **App topology** — how many apps? Mostly answered already by step 0's surfaces. Per the matched
+   profile's dependency-injection ADR each app gets its own composition root, and therefore its own
+   `AGENTS.md`.
    Codefall has **no opinion on repo layout** — monorepo or separate repos, workspaces or a single
    package. No ADR covers it, so do not recommend one and do not label an option "Recommended". If
    there is only one app, default to a single package without asking. If there is more than one, ask
    where the user wants them, say there is no house preference, and follow the answer.
 2. **Bounded contexts** — do the capabilities already have obvious names? These become the top-level
    component folders. Ask **once**, in one sentence, and offer "not yet" as a first-class answer.
-   If the user names some, keep them **coarse** — ADR-002 says start coarse and split, because
+   For a new project "not yet" is the **expected** answer, not the fallback — treat naming them as
+   the special case, and phrase the question so declining costs the user nothing.
+   If the user names some, keep them **coarse** — ADR-BASE-02 says start coarse and split, because
    re-slicing an existing boundary is the expensive case, and two or three is a fine start.
    If the answer is "not yet", vague, or hesitant: **take it and move to #3.** Do not push, do not
    suggest candidates, do not ask them to think it through. Codefall has an answer for exactly this
    case and it is a good one — the project does not need domains to be scaffolded.
 3. **Per-surface architecture** — package-by-component (the default) or ports-and-adapters?
-   ADR-002 names three conditions favoring p&a: boundaries genuinely unknown, one cohesive domain
+   ADR-BASE-02 names three conditions favoring p&a: boundaries genuinely unknown, one cohesive domain
    rather than separable capabilities, or no service-extraction goal. If the answer to #2 was "don't
-   know", recommend p&a for that surface and amend ADR-002 accordingly.
+   know", recommend p&a for that surface and amend ADR-BASE-02 accordingly.
 4. **Depth** — docs only, docs + project files, or a runnable skeleton? Default to **docs only**
    unless the user wants more. See [Depth](#depth).
 
@@ -247,11 +291,14 @@ nominated is noise.
 
 ### 2. Emit the docs — always
 
-- `docs/adrs/` — the shared ADRs (001, 002) plus every ADR the matched profiles supply, plus
-  `_TEMPLATE.md`. Dated and Accepted, amended per the interview. Drop ADRs that don't apply — a
-  backend-only project has no use for `typescript-react`'s ADR-004.
+- `docs/adrs/` — `ADR-BASE-01` and `ADR-BASE-02` plus every ADR the matched profiles supply, plus
+  `_TEMPLATE.md`. One flat directory: the prefixes keep them distinct, so a project matching two
+  profiles needs no subdirectories. Dated and Accepted, amended per the interview. Drop ADRs that
+  don't apply — a backend-only project has no use for `ADR-TS-02`.
 - `docs/decision-log.md` — the in-flight scratchpad, with `Locked` / `Open` / `Parking lot`
-  sections. Seed `Open` with anything the interview surfaced but didn't settle.
+  sections. Seed `Open` with anything the interview surfaced but didn't settle, and `Parking lot`
+  with the product detail step 0 heard but deliberately did not act on. Parking it is how that input
+  reaches `specify` and `architect` instead of being lost.
 - A scoped `AGENTS.md` per app/package, from the skeleton: fill the name, the one-line description,
   fix the ADR links to the right relative path, delete the `<frontend only>` blocks on backend
   surfaces, and fill in Gotchas. Keep it terse — it links the ADRs and never restates the why.
@@ -277,20 +324,23 @@ starts the app end to end with no features in it.
 The concrete file list for both tiers is the profile's business — see its **Depth notes**. Follow the
 profile rather than reaching for what you'd reflexively pick for the language.
 
-#### The ADR-005 obligation
+#### The boundary-enforcement obligation
 
-ADR-005 says boundary enforcement is wired **at the project scaffold, day one** — deferring defeats
-the purpose, and without it the package-by-component choice is cosmetic. Docs-only output cannot
-satisfy that. When emitting docs only, say so plainly in the report and name it as the first task
-the user owes the project.
+Every profile's boundary-enforcement ADR says the same thing: it is wired **at the project scaffold,
+day one** — deferring defeats the purpose, and without it the package-by-component choice is
+cosmetic. Docs-only output cannot satisfy that. When emitting docs only, say so plainly in the report
+and name it as the first task the user owes the project.
 
-The boundary config is the encoded architecture. Whenever you write it, it enforces all five ADR-005
-rules — facade-only imports, inward-only layers, cross-component via facades only, shared modules
-can't import components, and inner rings can't touch the UI framework or gateways.
+The boundary config is the encoded architecture. Whenever you write it, it enforces all five rules —
+facade-only imports, inward-only layers, cross-component via facades only, shared modules can't
+import components, and inner rings can't touch the UI framework or gateways.
 
-How much tooling this takes depends on the language's visibility model, which is why ADR-005 is
+How much tooling this takes depends on the language's visibility model, which is why the
+boundary-enforcement ADR is
 per-profile: TypeScript needs a linter because it has no `package-private`, while Kotlin `internal`,
-Rust `pub(crate)`, and Go's unexported identifiers do part of the job in the compiler.
+Rust `pub(crate)`, and Go's `internal/` packages do part of the job in the compiler. Part, not all —
+Go rejects import cycles but not outward ones, so the facade rules come free and the layer rule still
+needs a linter. Read the profile rather than assuming a language with real visibility needs nothing.
 
 ### 4. Verify
 
