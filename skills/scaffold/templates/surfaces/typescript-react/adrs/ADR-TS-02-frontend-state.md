@@ -1,4 +1,4 @@
-# ADR-004: Frontend State Management
+# ADR-TS-02: Frontend State Management
 
 ## Status
 
@@ -35,7 +35,7 @@ Zustand. Component-local? → React.
   never the route itself.
 - Real-time transports (WebSocket, SSE) **patch or invalidate the Query cache** rather than living in
   a parallel store.
-- Per ADR-003, the query client and the stores are frontend adapter-ring pieces and stay
+- Per ADR-TS-01, the query client and the stores are frontend adapter-ring pieces and stay
   framework-idiomatic (not in the DI container).
 
 ## Consequences
@@ -49,5 +49,5 @@ Zustand. Component-local? → React.
 
 ## Related
 
-- ADR-001 — Clean Architecture (the frontend's inner rings)
-- ADR-003 — Dependency Injection (the frontend DI boundary)
+- ADR-BASE-01 — Clean Architecture (the frontend's inner rings)
+- ADR-TS-01 — Dependency Injection (the frontend DI boundary)

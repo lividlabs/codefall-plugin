@@ -6,12 +6,13 @@
 
 The why lives in the ADRs. This file is the operative rules only — never restate the reasoning here.
 
-- [ADR-001 Clean Architecture](<path>/docs/adrs/ADR-001-clean-architecture.md) ·
-  [ADR-002 Package-by-component](<path>/docs/adrs/ADR-002-package-by-component.md) ·
-  [ADR-003 Dependency Injection](<path>/docs/adrs/ADR-003-dependency-injection.md) ·
-  [ADR-004 Frontend state](<path>/docs/adrs/ADR-004-frontend-state.md) ·
-  [ADR-005 Boundary enforcement](<path>/docs/adrs/ADR-005-boundary-enforcement.md)
+- [ADR-BASE-01 Clean Architecture](<path>/docs/adrs/ADR-BASE-01-clean-architecture.md) ·
+  [ADR-BASE-02 Package-by-component](<path>/docs/adrs/ADR-BASE-02-package-by-component.md) ·
+  [ADR-TS-01 Dependency Injection](<path>/docs/adrs/ADR-TS-01-dependency-injection.md) ·
+  [ADR-TS-02 Frontend state](<path>/docs/adrs/ADR-TS-02-frontend-state.md) ·
+  [ADR-TS-03 Boundary enforcement](<path>/docs/adrs/ADR-TS-03-boundary-enforcement.md)
 - <plus any surface-specific ADRs>
+- <plus this project's own ADRs, numbered separately from ADR-001>
 
 ## Structure
 
