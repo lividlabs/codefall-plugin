@@ -43,12 +43,22 @@ fit instead.
 ### When to prefer ports-and-adapters instead
 
 Choose **ports-and-adapters** (organize inside = framework-free core vs outside = adapters) when:
-- your capability boundaries are genuinely unknown and you want zero commitment yet,
 - the domain is one cohesive thing rather than several separable capabilities, or
-- there is no service-extraction goal.
+- your capability boundaries are genuinely unknown and you want zero commitment yet.
 
-Package-by-component's advantage — a component boundary that doubles as a future-service seam — only
-pays off once boundaries are known.
+These are alternatives, so **either one alone is enough** — which is why the list must stay short and
+must not include proxies for the real question.
+
+Package-by-component's advantage — an enforced boundary around each capability, which also doubles as
+a service seam if you ever want one — only pays off once boundaries are known.
+
+**Not having a service-extraction goal is not a reason to choose ports-and-adapters.** The payoff here
+is encapsulation, not deployment: without an enforced boundary, package-by-component degrades into
+package-by-feature with everything public, and that degradation is just as bad in a CLI that will
+never be split as in a platform that will. A tool with three separable capabilities and no intention
+of ever deploying them apart still gets a screaming domain, per-capability facades, local reasoning,
+and a contained blast radius. Extraction readiness (ADR-BASE-03) is what becomes moot when nothing
+will ever be extracted — the layout does not.
 
 ## Consequences
 
