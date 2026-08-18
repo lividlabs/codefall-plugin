@@ -29,13 +29,17 @@ toolchain:
 | React Native | Metro transpiles with Babel, not `tsc`. Harmless under this profile's explicit-token rule; see the trap below for why. |
 
 **The decorator-metadata trap, and why this profile sidesteps it.** Implicit Inversify resolution
-needs `design:paramtypes` metadata, which only `tsc` emits. Metro transpiles with Babel and Next.js
-with SWC; under either, the tsconfig flag is inert and injection fails at *runtime*, not at build.
+reads `design:paramtypes`. That metadata records *runtime* types, and a TypeScript interface has
+none — it erases to `Object`. Since ADR-TS-01 requires every dependency to be typed as an interface,
+implicit resolution cannot work **under any toolchain, `tsc` included**. It is not a bundler problem.
 
-The historical fix was per-toolchain — `babel-plugin-transform-typescript-metadata` for Metro, and an
-equivalent dance for SWC. ADR-TS-01 instead makes `@inject(TYPES.Thing)` mandatory on every
-constructor parameter, which needs no metadata at all. One rule, every renderer and every bundler,
-no plugin to forget.
+Toolchain differences make it worse rather than causing it. Next.js detects `emitDecoratorMetadata`
+in tsconfig and turns on SWC's transform, while Metro strips types with Babel and emits nothing
+unless `babel-plugin-transform-typescript-metadata` is added. So a class-typed parameter with a
+forgotten `@inject` resolves on Next and fails on React Native — the same code, two behaviours.
+
+ADR-TS-01 makes `@inject(TYPES.Thing)` mandatory on every constructor parameter, which needs no
+metadata at all. One rule, every renderer and every bundler, nothing to configure.
 
 Verify it the way step 6 requires: resolve one decorated class from the container in a smoke test. A
 container that fails only on the first real injection is the failure mode here, and it is the one
@@ -49,7 +53,7 @@ split.
 
 | Topology | Shape | Pick it when |
 | --- | --- | --- |
-| **SPA + API** | A React bundle served statically, talking to a separate Node service over HTTP | Nothing needs to be reachable or indexable without logging in |
+| **SPA + API** | A React bundle served statically, talking to a separate Node service over HTTP | No route needs *both* public reach and indexing |
 | **Next.js SSR shell** | One app: `app/api/**/route.ts` holds the backend, client components hold the UI | Some routes must be **publicly reachable and worth indexing** |
 
 The deciding question is *publicly reachable and worth indexing*, not static-versus-dynamic and not
@@ -64,7 +68,10 @@ stance exists to keep. In practice that means a lot of `'use client'` and no `'u
 the correct smell for this topology.
 
 Server rendering is then applied per route: public routes prefetch on the server and hydrate the
-query cache (ADR-TS-02); authenticated routes fetch client-side as usual.
+query cache (ADR-TS-02); authenticated routes fetch client-side as usual. That prefetch runs in a
+server-component page, which is the **second and last** container-aware file kind alongside a route
+handler — see ADR-TS-01. It resolves a use case and prefetches with it directly; it does not call the
+app's own HTTP API, which would mean absolute URLs and forwarded cookies for no gain.
 
 ### The Next.js per-request trap
 
@@ -150,12 +157,13 @@ a desktop or mobile app, a library — not for one that merely has no current pl
 ## Depth notes
 
 Beyond docs, this profile's **project files** tier owes: `package.json`, a `tsconfig` with
-`experimentalDecorators` (and `emitDecoratorMetadata`, which is harmless but must not be depended
-on), ESLint including the `eslint-plugin-boundaries` rules, formatter, test runner, and CI running
-all of it.
+`experimentalDecorators`, ESLint including the `eslint-plugin-boundaries` rules, formatter, test
+runner, and CI running all of it.
 
-No per-toolchain metadata plugin is needed on any target, because ADR-TS-01 mandates explicit tokens.
-That is the point of the rule: one configuration works under `tsc`, Metro, and SWC alike.
+**Do not set `emitDecoratorMetadata`.** Nothing here needs it, and enabling it lets a forgotten
+`@inject` on a class-typed parameter resolve on some toolchains and not others — a portability bug
+that the explicit-token rule exists to make impossible. No metadata plugin is needed on any target
+for the same reason.
 
 On the **Next.js topology**, add `next.config.ts`, the `app/` tree with at least one
 `app/api/**/route.ts`, and the container module described in ADR-TS-01. Wire the `QueryClient` and

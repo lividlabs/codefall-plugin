@@ -27,9 +27,12 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
   export const container: Container = (globalThis.__container ??= buildContainer())
   ```
 
-  A **route handler is the only container-aware file**. It resolves what it needs and passes those
-  use cases as arguments into a handler in `presentation/`, which never imports the container. That
-  keeps the service-locator rule below intact by confining the locator to the boundary.
+  **Two file kinds may touch the container, and no others**: a route handler, and a server-component
+  page that prefetches for a publicly indexed route (ADR-TS-02). Both are entry points — the outermost
+  edge of a request — and both do the same thing: resolve what they need and pass those use cases as
+  arguments inward, into a `presentation/` handler or a client component's props. Neither the handler
+  nor any component imports the container. That keeps the service-locator rule below intact by
+  confining the locator to the boundary rather than by counting files.
   This container is deliberately module-global; see the profile's per-request trap for why the query
   client and the stores must not be.
 
@@ -41,10 +44,11 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
   the parameter's own type imported as `import type`. Never rely on Inversify inferring the type from
   emitted metadata.
 
-  This is a portability rule, not a style one. Implicit resolution needs `design:paramtypes`, which
-  only `tsc` emits; Metro transpiles with Babel and Next.js with SWC, and under either the inference
-  silently fails at runtime rather than at build. An explicit token needs no metadata, so the same
-  code resolves identically under every toolchain.
+  Implicit resolution reads `design:paramtypes`, which records runtime types. An interface has no
+  runtime type — it erases to `Object` — so under **every** toolchain, `tsc` included, inference
+  cannot resolve an interface-typed parameter. The rule above is what makes injection work at all,
+  not a workaround for a particular bundler. It also removes the portability hazard: with tokens
+  everywhere, the same code resolves identically under `tsc`, SWC, and Babel.
 
 ### Naming
 
@@ -72,9 +76,10 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
 
 ## Consequences
 
-- Decorators require `reflect-metadata` and tsconfig `experimentalDecorators`. Set
-  `emitDecoratorMetadata` too — it costs nothing and helps tooling — but nothing may *depend* on it,
-  because explicit tokens are mandatory above.
+- Decorators require `reflect-metadata` and tsconfig `experimentalDecorators`. **Leave
+  `emitDecoratorMetadata` off.** It cannot help — an interface-typed parameter erases to `Object`, so
+  there is nothing useful to emit — and turning it on lets a class-typed parameter with a forgotten
+  token resolve under some toolchains and fail under others.
 - Rebind-to-mock is a uniform, clean test seam across packages.
 - Some bundle-size cost on the frontend; acceptable for app surfaces.
 - The "magic" of a container is centralized in one composition root, not scattered.

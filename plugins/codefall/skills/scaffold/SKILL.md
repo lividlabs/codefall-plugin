@@ -84,7 +84,7 @@ Stack-agnostic — every project gets these:
 | --- | --- |
 | `templates/adrs/ADR-BASE-01-clean-architecture.md` | The dependency rule and the four layers |
 | `templates/adrs/ADR-BASE-02-package-by-component.md` | Top-level organization; when to prefer p&a |
-| `templates/adrs/ADR-BASE-03-extraction-readiness.md` | Keeping components cheap to split out later |
+| `templates/adrs/ADR-BASE-03-extraction-readiness.md` | Keeping components cheap to split out later — **surfaces that can never be split skip this one** |
 | `templates/adrs/_TEMPLATE.md` | Thin ADR template for new decisions |
 
 Per surface, under `templates/surfaces/<name>/` — a `PROFILE.md`, an `AGENTS.md.skeleton`, and the
@@ -166,6 +166,10 @@ If the sentence genuinely doesn't say, ask once, flatly: *does this break into a
 capabilities, or is it one cohesive thing?* That is a question about shape, not about the product,
 and it is the only follow-up this step is allowed.
 
+If that follow-up still doesn't settle it, **record the shape as unclear and move on.** Do not ask
+again and do not guess — step 3 handles an unclear shape as a provisional choice rather than a
+decided one.
+
 **Most projects are not defined yet, and that is the normal case.** The user is starting something.
 They do not owe you a product description, and a scaffold does not need one. Do not ask what the
 features are, what the data looks like, who the users are, or how any of it behaves.
@@ -187,8 +191,8 @@ shape judgement forward to step 3 — it is an input to #3, not something to re-
 
 **Note any rendering signal without asking for one.** If the description mentions public pages,
 sharing, browsing without an account, or search visibility, that decides a React surface's topology
-in #1 below. Don't go looking for it — the question belongs there, and only if the description was
-silent.
+in step 3's question #1. Don't go looking for it — the question belongs there, and only if the
+description was silent.
 
 #### Decomposition
 
@@ -218,14 +222,18 @@ one.
 
 #### The stack question
 
-**Name the profile the description already implies, and confirm it.** "A website" implies
+**Name the profile the description already implies, and confirm it.** "A React app" implies
 `typescript-react`; "a CLI in Go" implies `go`. Say which you matched and give the user a plain way
 to say otherwise.
 
-**Do not present every supported profile as a co-equal menu.** Offering `go` beside
-`typescript-react` for a website invites a choice the description already made, and implies the two
-are equally indicated when they are not. Confirming one is faster and more honest than picking from
-a list.
+**Only where the description actually decided.** "A website" decides the *frontend* — that is
+`typescript-react` — and says nothing about what serves it. Confirm the part that was decided and ask
+about the part that wasn't; assuming a Node backend because the frontend is React is exactly the
+steering this skill promises not to do.
+
+**Do not present every supported profile as a co-equal menu** where one was clearly named. Offering
+`go` beside `typescript-react` for "a React app" invites a choice the user already made, and implies
+the two are equally indicated when they are not.
 
 Ask with the full list **only when the description genuinely leaves it open** — "an API", "a
 service", "a background worker" with no language named. Then there is a real choice, and it is:
@@ -393,7 +401,8 @@ nominated is noise.
   not act on. Parking it is how that input reaches `specify` and `architect` instead of being lost.
 - A scoped `AGENTS.md` per app/package, from the skeleton: fill the name, the one-line description,
   fix the ADR links to the right relative path, delete the `<frontend only>` blocks on backend
-  surfaces, and fill in Gotchas. Keep it terse — it links the ADRs and never restates the why.
+  surfaces, delete the `<never-splittable>` block and its ADR-BASE-03 link on a surface that can never
+  be split, and fill in Gotchas. Keep it terse — it links the ADRs and never restates the why.
 
 If the harness in use reads `CLAUDE.md` rather than `AGENTS.md`, add `CLAUDE.md` as a one-line
 pointer to `AGENTS.md`. Do not maintain two copies of the rules.
