@@ -212,7 +212,17 @@ one.
 
 #### The stack question
 
-Offer **one option per supported profile**, and nothing else:
+**Name the profile the description already implies, and confirm it.** "A website" implies
+`typescript-react`; "a CLI in Go" implies `go`. Say which you matched and give the user a plain way
+to say otherwise.
+
+**Do not present every supported profile as a co-equal menu.** Offering `go` beside
+`typescript-react` for a website invites a choice the description already made, and implies the two
+are equally indicated when they are not. Confirming one is faster and more honest than picking from
+a list.
+
+Ask with the full list **only when the description genuinely leaves it open** — "an API", "a
+service", "a background worker" with no language named. Then there is a real choice, and it is:
 
 - `typescript-react` — TypeScript/Node backends, React frontends (web and Native), and Tauri or
   Electron apps whose native side is only wiring
@@ -220,7 +230,8 @@ Offer **one option per supported profile**, and nothing else:
 - **None of these**
 
 That list is generated from the catalog. When a profile moves from planned to supported it gains an
-option; until then it has none.
+option; until then it has none. The rule that matters is not *how many* supported profiles you show
+— it is that **you never show one that isn't supported**.
 
 **Never list a planned profile as an option.** `rust-native`, `python`, `dart-flutter` and the rest
 are not available, so offering them and then refusing spends the user's choice on nothing. An option
