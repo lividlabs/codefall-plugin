@@ -171,6 +171,11 @@ decision-log's **Parking lot** and say you did. Recorded, not acted on.
 Decompose the answer into surfaces, then confirm each one with the stack question below. Carry the
 shape judgement forward to step 1 — it is an input to #3, not something to re-litigate there.
 
+**Note any rendering signal without asking for one.** If the description mentions public pages,
+sharing, browsing without an account, or search visibility, that decides a React surface's topology
+in #1 below. Don't go looking for it — the question belongs there, and only if the description was
+silent.
+
 #### Decomposition
 
 Do this explicitly — it is the step that decides everything downstream.
@@ -286,6 +291,12 @@ difference between a considered default and one you made up on the spot.
    package. No ADR covers it, so do not recommend one and do not label an option "Recommended". If
    there is only one app, default to a single package without asking. If there is more than one, ask
    where the user wants them, say there is no house preference, and follow the answer.
+   **Also settle the topology of each React surface** — SPA plus a separate API, or a Next.js SSR
+   shell. The profile describes both and the choice turns on one question: does anything need to be
+   publicly reachable and worth indexing? If step 0's description already answered that, take it and
+   do not ask again. If it was silent, ask exactly that question once — not "do you want Next.js",
+   which invites a preference where there is a criterion. Default to SPA plus API when the answer is
+   no.
 2. **Bounded contexts** — do the capabilities already have obvious names? If so, they become the
    top-level component folders. Ask **once**, in one sentence, and offer "not yet" as a first-class
    answer. For a new project "not yet" is the **expected** answer, not the fallback — treat naming

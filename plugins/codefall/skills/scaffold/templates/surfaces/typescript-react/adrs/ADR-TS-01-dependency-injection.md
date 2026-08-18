@@ -18,11 +18,33 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
 - **Inversify** across all TypeScript packages. **One composition root per app**; library packages
   export `ContainerModule`s the app's root loads. The composition root is the only place that names
   concrete implementations.
+- On the **Next.js topology** the root is a module, not an entry point, because every route handler
+  is its own entry. Build the container once at module load and cache it on `globalThis`, so dev
+  hot-reload does not rebuild it per request:
+
+  ```ts
+  declare global { var __container: Container | undefined }
+  export const container: Container = (globalThis.__container ??= buildContainer())
+  ```
+
+  A **route handler is the only container-aware file**. It resolves what it needs and passes those
+  use cases as arguments into a handler in `presentation/`, which never imports the container. That
+  keeps the service-locator rule below intact by confining the locator to the boundary.
+  This container is deliberately module-global; see the profile's per-request trap for why the query
+  client and the stores must not be.
 
 ### Injection discipline
 
 - **Inject only interfaces** — every injected dependency is typed as an interface, never a concrete
   class. (Practical exception: config/value objects injected by token.)
+- **Always name the token explicitly** — `@inject(TYPES.Thing)` on every constructor parameter, with
+  the parameter's own type imported as `import type`. Never rely on Inversify inferring the type from
+  emitted metadata.
+
+  This is a portability rule, not a style one. Implicit resolution needs `design:paramtypes`, which
+  only `tsc` emits; Metro transpiles with Babel and Next.js with SWC, and under either the inference
+  silently fails at runtime rather than at build. An explicit token needs no metadata, so the same
+  code resolves identically under every toolchain.
 
 ### Naming
 
@@ -50,8 +72,9 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
 
 ## Consequences
 
-- Decorators require `reflect-metadata` and tsconfig `experimentalDecorators` /
-  `emitDecoratorMetadata` (set once in a shared base config).
+- Decorators require `reflect-metadata` and tsconfig `experimentalDecorators`. Set
+  `emitDecoratorMetadata` too — it costs nothing and helps tooling — but nothing may *depend* on it,
+  because explicit tokens are mandatory above.
 - Rebind-to-mock is a uniform, clean test seam across packages.
 - Some bundle-size cost on the frontend; acceptable for app surfaces.
 - The "magic" of a container is centralized in one composition root, not scattered.
