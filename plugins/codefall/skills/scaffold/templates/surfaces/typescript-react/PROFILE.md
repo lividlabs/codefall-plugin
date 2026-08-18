@@ -37,7 +37,7 @@ equivalent dance for SWC. ADR-TS-01 instead makes `@inject(TYPES.Thing)` mandato
 constructor parameter, which needs no metadata at all. One rule, every renderer and every bundler,
 no plugin to forget.
 
-Verify it the way step 4 requires: resolve one decorated class from the container in a smoke test. A
+Verify it the way step 6 requires: resolve one decorated class from the container in a smoke test. A
 container that fails only on the first real injection is the failure mode here, and it is the one
 thing a type-check will never catch.
 

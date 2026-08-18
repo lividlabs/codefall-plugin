@@ -123,7 +123,7 @@ The **runnable skeleton** tier adds `cmd/<app>/main.go` wiring the composition r
 no features in it, plus each component directory with its facade file and the four nested layer
 packages.
 
-Verify the boundary rules the way step 4 requires, and note that Go gives you a sharper test than
+Verify the boundary rules the way step 6 requires, and note that Go gives you a sharper test than
 most profiles: a deliberate cross-component reach-around should **fail `go build`**, and a deliberate
 outward layer import should fail `golangci-lint run` while still compiling. Check both. A `depguard`
 config that matches no files passes silently and looks identical to one that works.
