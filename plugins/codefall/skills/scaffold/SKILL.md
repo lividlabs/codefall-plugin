@@ -272,12 +272,27 @@ were left undecided and that their boundary-enforcement obligation is unmet.
 
 ### 0b. Seams — for composed projects only
 
-Skip this when the decomposition found one surface. A thin-shell Tauri app has an IPC boundary but
-not a seam in this sense: the domain lives in one place, and `invoke` is just a gateway
-implementation like any HTTP client.
+**Start from the default: the domain lives on the server.** A browser, a thin native shell, or any
+client that renders and calls an API is not a second domain-bearing surface. It holds no entities and
+no use cases of its own, so there is no seam — a `fetch`, an `invoke`, and a platform channel are all
+gateway implementations, and ADR-BASE-01 already decides how they are treated.
 
-Two or more **domain-bearing** surfaces is a different matter, and profiles deliberately don't decide
-the boundary. Where they meet, settle:
+That covers most projects, including every ordinary web app. **Skip this step unless a client holds
+domain logic of its own**, which happens in three recognisable cases:
+
+- **Offline-capable mobile or desktop apps.** A client that must decide, validate, and reconcile
+  without asking the server is running domain rules, not rendering someone else's.
+- **Games.** In-game simulation cannot round-trip, so the rules live on the client — while accounts,
+  inventory, and progression usually live on the server. Two domains, genuinely.
+- **No server at all.** A standalone SPA, a CLI, a local-only tool. Then the client *is* the whole
+  app: one surface, and still no seam.
+
+The third case is a reminder that two *processes* are not two domains, and one process is never two.
+Ask directly rather than inferring it from the file listing: *does this client decide anything on its
+own, or does it always ask?*
+
+When a client genuinely does hold domain logic, the profiles deliberately don't decide the boundary.
+Where the two meet, settle:
 
 - **Which side owns the domain.** In a fat-shell Tauri app or a Flutter-plus-API project the entities
   can live on either side, or — badly — on both. Pick one and write it down.
