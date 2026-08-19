@@ -29,8 +29,10 @@ never restates the reasoning.
 
 ## Workflow
 
-- Branch and open a PR; a ruleset forbids pushing `main`. Check `gh pr list` before basing new
-  work — PRs stack here.
+- All work happens on a branch or worktree, never directly on `main` — a ruleset forbids pushing
+  it anyway. Every change lands through a PR.
+- Stacked branches are fine, and the right way to break large work into smaller reviewable
+  pieces. Check `gh pr list` before basing new work.
 - Conventional commits, with a body that says *why*. release-please reads the types
   (`release-please-config.json` maps them to changelog sections).
 - release-please owns `CHANGELOG.md` and the `version` in
