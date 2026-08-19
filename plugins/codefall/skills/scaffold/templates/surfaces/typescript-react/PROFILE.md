@@ -21,21 +21,73 @@ served over HTTP or embedded in a native shell.
 React is the component model; the renderer is an outer-ring detail. The same domain, use cases,
 gateways, DI, and boundary rules serve React DOM and React Native alike — ADR-TS-02's three-tier split
 is unchanged, since TanStack Query, Zustand, and `useState` all run on React Native. What varies is
-toolchain, and one delta is load-bearing:
+toolchain:
 
 | Target | Delta |
 | --- | --- |
-| React DOM (web) | The baseline. |
-| React Native | **Metro transpiles with Babel, not `tsc`.** |
+| React DOM (web) | The baseline. Topology varies — see below. |
+| React Native | Metro transpiles with Babel, not `tsc`. Harmless under this profile's explicit-token rule; see the trap below for why. |
 
-**The React Native decorator trap.** ADR-TS-01 relies on tsconfig `emitDecoratorMetadata`, which is a
-`tsc` feature. Metro never reads it — Babel strips types without emitting `design:type` metadata, so
-Inversify cannot infer constructor parameter types and injection fails at runtime, not at build. Add
-`babel-plugin-transform-typescript-metadata` (ordered before the decorators plugin) in
-`babel.config.js`. Setting the tsconfig flags alone looks correct and does nothing.
+**The decorator-metadata trap, and why this profile sidesteps it.** Implicit Inversify resolution
+needs `design:paramtypes` metadata, which only `tsc` emits. Metro transpiles with Babel and Next.js
+with SWC; under either, the tsconfig flag is inert and injection fails at *runtime*, not at build.
 
-Verify this the way step 4 requires: resolve one decorated class from the container in a smoke test.
-A container that fails only on the first real injection is the failure mode here.
+The historical fix was per-toolchain — `babel-plugin-transform-typescript-metadata` for Metro, and an
+equivalent dance for SWC. ADR-TS-01 instead makes `@inject(TYPES.Thing)` mandatory on every
+constructor parameter, which needs no metadata at all. One rule, every renderer and every bundler,
+no plugin to forget.
+
+Verify it the way step 4 requires: resolve one decorated class from the container in a smoke test. A
+container that fails only on the first real injection is the failure mode here, and it is the one
+thing a type-check will never catch.
+
+### App topologies
+
+React DOM projects come in two shapes, and the choice changes the composition root and the lifetime
+of the client-side libraries. It does **not** change the layering, the DI container, or the state
+split.
+
+| Topology | Shape | Pick it when |
+| --- | --- | --- |
+| **SPA + API** | A React bundle served statically, talking to a separate Node service over HTTP | Nothing needs to be reachable or indexable without logging in |
+| **Next.js SSR shell** | One app: `app/api/**/route.ts` holds the backend, client components hold the UI | Some routes must be **publicly reachable and worth indexing** |
+
+The deciding question is *publicly reachable and worth indexing*, not static-versus-dynamic and not
+first-party-versus-user-generated. A user-authored deck list at `/decks/must-have-cards-for-twin-suns`
+is dynamic, user-generated, and exactly the thing that needs server rendering. A logged-in
+collection page is none of those and can stay client-only.
+
+**Keep the split.** Next.js here is an SSR shell over a conventional frontend/backend division, not
+an invitation to server-component-first architecture. The backend lives behind route handlers; the
+UI is client components calling them. Server Actions are not used — they blur the boundary this
+stance exists to keep. In practice that means a lot of `'use client'` and no `'use server'`, which is
+the correct smell for this topology.
+
+Server rendering is then applied per route: public routes prefetch on the server and hydrate the
+query cache (ADR-TS-02); authenticated routes fetch client-side as usual.
+
+### The Next.js per-request trap
+
+**Module-global is correct for stateless wiring and a data-leak bug for anything holding request
+state.** One principle, two opposite conclusions, and getting either backwards is a real defect
+rather than a style question.
+
+The Inversify container **should** be a module-scoped singleton, cached on `globalThis` so dev
+hot-reload does not rebuild it per request. It holds bindings, not data.
+
+The `QueryClient` and every Zustand store **must not** be. A Next.js server handles concurrent
+requests, so a module-level store or query cache is shared across users. TanStack Query's SSR guide
+prescribes a fresh `QueryClient` per request on the server "to prevent data leakage between
+requests," and Zustand's Next.js guide is blunter:
+
+> **No global stores** — Because the store should not be shared across requests, it should not be
+> defined as a global variable. Instead, the store should be created per request.
+
+Zustand additionally forbids Server Components reading or writing stores at all, since RSCs cannot
+use hooks or context. That falls out of the topology above anyway: state lives in client components.
+
+This is the Next.js sibling of the React Native decorator trap — it looks correct, passes review, and
+fails only under concurrency, where the symptom is one user seeing another's data.
 
 ### Thin-shell desktop and mobile apps
 
@@ -77,7 +129,9 @@ example: the compiler covers the facade rules outright, and only the layer rule 
 
 | Concern | Choice | ADR |
 | --- | --- | --- |
-| DI container | Inversify, one composition root per app | ADR-TS-01 |
+| DI container | Inversify, one composition root per app; explicit `@inject` tokens always | ADR-TS-01 |
+| App topology | SPA + separate API, or Next.js SSR shell | — |
+| Next.js lifetimes | Container module-global; `QueryClient` and stores per request | ADR-TS-01, ADR-TS-02 |
 | Server state | TanStack Query | ADR-TS-02 |
 | Shared client state | Zustand | ADR-TS-02 |
 | Local UI state | `useState` / `useReducer` | ADR-TS-02 |
@@ -94,11 +148,17 @@ Shared ADR-BASE-01 and ADR-BASE-02 come from `templates/adrs/` and apply to ever
 ## Depth notes
 
 Beyond docs, this profile's **project files** tier owes: `package.json`, a `tsconfig` with
-`experimentalDecorators` and `emitDecoratorMetadata` (ADR-TS-01 needs both), ESLint including the
-`eslint-plugin-boundaries` rules, formatter, test runner, and CI running all of it.
+`experimentalDecorators` (and `emitDecoratorMetadata`, which is harmless but must not be depended
+on), ESLint including the `eslint-plugin-boundaries` rules, formatter, test runner, and CI running
+all of it.
 
-On **React Native**, those tsconfig flags are not sufficient — see the decorator trap above. Add the
-Babel metadata plugin as well, or DI compiles clean and fails at runtime.
+No per-toolchain metadata plugin is needed on any target, because ADR-TS-01 mandates explicit tokens.
+That is the point of the rule: one configuration works under `tsc`, Metro, and SWC alike.
+
+On the **Next.js topology**, add `next.config.ts`, the `app/` tree with at least one
+`app/api/**/route.ts`, and the container module described in ADR-TS-01. Wire the `QueryClient` and
+any Zustand provider as per-request instances from the start — retrofitting that after the fact means
+auditing every store for cross-request leakage.
 
 The **runnable skeleton** tier adds the component folders with their `index.ts` facades and nested
 Clean layers, plus one Inversify composition root per app that boots with no features in it.

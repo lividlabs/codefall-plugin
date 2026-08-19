@@ -38,6 +38,34 @@ Zustand. Component-local? → React.
 - Per ADR-TS-01, the query client and the stores are frontend adapter-ring pieces and stay
   framework-idiomatic (not in the DI container).
 
+### Lifetimes on the Next.js topology
+
+The four categories above are unchanged. What changes is **instantiation**, and getting it wrong
+leaks one user's data to another.
+
+- **A `QueryClient` is created per request on the server** and reused as a singleton in the browser.
+  TanStack Query's SSR guide prescribes exactly this, "to prevent data leakage between requests."
+- **Zustand stores are created per request**, via a provider at the component level — never as module
+  globals. Zustand's Next.js guide: *"No global stores — Because the store should not be shared
+  across requests, it should not be defined as a global variable."*
+- **Server Components neither read nor write stores.** They cannot use hooks or context, and on this
+  topology all state lives in client components anyway.
+
+Contrast this with the DI container, which *is* a module-scoped global (ADR-TS-01). The rule behind
+both: module-global is correct for stateless wiring and a data-leak bug for anything holding request
+state.
+
+### Server rendering, per route
+
+Decide route by route, on one question: **is this publicly reachable and worth indexing?**
+
+- **Yes** — prefetch on the server, `dehydrate` the client, and wrap the tree in a
+  `HydrationBoundary`. The client then renders from a warm cache instead of re-fetching.
+- **No** — fetch client-side as usual. An authenticated view gains nothing from server rendering.
+
+The question is not static-versus-dynamic and not first-party-versus-user-generated. A user-authored
+public list is dynamic, user-generated, and squarely in the first case.
+
 ## Consequences
 
 - Server-state concerns (caching, refetch, retry, loading/error) are the library's, not bespoke
@@ -46,6 +74,9 @@ Zustand. Component-local? → React.
 - The no-mirroring rules are load-bearing and enforced in review.
 - **Redux is deliberately not chosen** — heavier than this split needs, and it still requires a
   query layer for server state.
+- On Next.js, the per-request rules are a correctness constraint rather than a preference, and their
+  failure mode is cross-user data exposure under concurrency. Treat a module-level store or query
+  client as a defect, not a shortcut.
 
 ## Related
 
