@@ -6,6 +6,30 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.4.0](https://github.com/lividlabs/codefall-plugin/compare/v0.3.1...v0.4.0) (2026-08-19)
+
+
+### Features
+
+* add ADR-BASE-03, extraction readiness ([#18](https://github.com/lividlabs/codefall-plugin/issues/18)) ([013d87b](https://github.com/lividlabs/codefall-plugin/commit/013d87b8f1d2f8b743bb7cc4b817a6bef2c64daa))
+* add the graft skill for bringing scaffolded projects current ([#24](https://github.com/lividlabs/codefall-plugin/issues/24)) ([0d11fd1](https://github.com/lividlabs/codefall-plugin/commit/0d11fd187d95126669f6389c3dfd33eb15294032))
+* add the Next.js topology to typescript-react ([#17](https://github.com/lividlabs/codefall-plugin/issues/17)) ([2e2a8bf](https://github.com/lividlabs/codefall-plugin/commit/2e2a8bfe5522c03835181339b8fb3f1c03666f06))
+* record scaffold provenance in .codefall/scaffold.json ([#21](https://github.com/lividlabs/codefall-plugin/issues/21)) ([9edddc9](https://github.com/lividlabs/codefall-plugin/commit/9edddc97a1158e578732a76aa90c7cda6921015c))
+* seed workflow defaults into the scaffolded AGENTS.md ([#27](https://github.com/lividlabs/codefall-plugin/issues/27)) ([e83563f](https://github.com/lividlabs/codefall-plugin/commit/e83563f23c615ce4f80bdbf6ae45960015ac35d6))
+
+
+### Bug Fixes
+
+* land taken revisions as superseding ADRs, never rewrites ([#25](https://github.com/lividlabs/codefall-plugin/issues/25)) ([d7abe20](https://github.com/lividlabs/codefall-plugin/commit/d7abe20adba620c761f02164c3262d551bec87e1))
+* let shape, not missing names, choose the architecture ([#16](https://github.com/lividlabs/codefall-plugin/issues/16)) ([3f9e4d0](https://github.com/lividlabs/codefall-plugin/commit/3f9e4d0f1e9cfd39ab9ac6455a7ee5c9e3844c3e))
+* remove the extraction goal as a reason to choose ports-and-adapters ([#19](https://github.com/lividlabs/codefall-plugin/issues/19)) ([8e16e93](https://github.com/lividlabs/codefall-plugin/commit/8e16e933645fc0349c8eb9fb9cb1cf9daa69c109))
+* step 1 behaviour, process renumbering, and stance cleanup ([#20](https://github.com/lividlabs/codefall-plugin/issues/20)) ([9d467d6](https://github.com/lividlabs/codefall-plugin/commit/9d467d6d72080cfd64dda26f7c90972f27d0cfd7))
+
+
+### Documentation
+
+* state the branch-always and stacked-branch rules explicitly ([#26](https://github.com/lividlabs/codefall-plugin/issues/26)) ([517d200](https://github.com/lividlabs/codefall-plugin/commit/517d20021650ea7678f0bf06e6b4b6fb34a5edb4))
+
 ## [0.3.1](https://github.com/lividlabs/codefall-plugin/compare/v0.3.0...v0.3.1) (2026-08-17)
 
 
