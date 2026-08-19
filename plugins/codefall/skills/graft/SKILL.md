@@ -270,7 +270,9 @@ the graft should be reviewable as one coherent change.
 
 ## Conventions
 
-- Skills in this plugin are named as **verbs** (`graft`, not `grafter` or `update`).
+Repo-wide rules — verb naming, template lineage upkeep, ADR immutability — live in the plugin
+repo's root `AGENTS.md`. Specific to this skill:
+
 - `lineage.md` is load-bearing: any change that renames, moves, or retires a template ships a row
   in it, in the same PR. Graft can only tell a rename from a deletion because that record exists.
 - Graft writes nothing outside the target project. The plugin's own files — templates, lineage,
