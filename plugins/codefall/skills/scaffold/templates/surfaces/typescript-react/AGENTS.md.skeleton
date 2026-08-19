@@ -53,6 +53,13 @@ The why lives in the ADRs. This file is the operative rules only — never resta
 
 - `index.ts` facades + `eslint-plugin-boundaries`. Don't import past a component's facade.
 
+## Workflow
+
+- Conventional commits, with a body that says *why*.
+- Work happens on a branch or worktree, never on `main`. Stacked branches are fine for landing
+  large work as smaller reviewable pieces.
+- Deliberately minimal: no branching model beyond this is decided here.
+
 ## Gotchas
 
 - <surface-specific things a contributor must know>

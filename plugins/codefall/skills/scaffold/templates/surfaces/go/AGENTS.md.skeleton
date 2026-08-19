@@ -84,6 +84,13 @@ The why lives in the ADRs. This file is the operative rules only — never resta
   reach-around must fail `go build`. An outward layer import must fail `golangci-lint run` *while
   still compiling*. Checking only the first tests the compiler, not the configuration.
 
+## Workflow
+
+- Conventional commits, with a body that says *why*.
+- Work happens on a branch or worktree, never on `main`. Stacked branches are fine for landing
+  large work as smaller reviewable pieces.
+- Deliberately minimal: no branching model beyond this is decided here.
+
 ## Gotchas
 
 - A `depguard` rule whose `files` pattern matches nothing reports `0 issues` and exits 0, looking
