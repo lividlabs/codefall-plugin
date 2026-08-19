@@ -34,11 +34,14 @@ Scaffold decides **how this project will be built**. It does not decide **what i
 This is a hard line, and the most common way this skill goes wrong is crossing it. You are not
 designing the application. Do not propose entities, sketch a schema, reason about how a feature will
 behave, or ask questions whose only purpose is to understand the product. If the user describes what
-they're building, that is context for matching a profile — not an invitation to design it.
+they're building, that is context for matching a profile and judging shape — not an invitation to
+design it.
 
-**Not knowing the domain yet is normal and fine.** A project can be scaffolded before anyone knows
-what its capabilities are; ADR-BASE-02 already handles that case by preferring ports-and-adapters when
-boundaries are unknown. Ask once, accept "not yet" the first time it is said, and move on.
+**Not having named the domains yet is normal and fine**, and it is not the same as not having any.
+A project can be scaffolded before anyone has picked names; step 0 judges whether the thing is one
+cohesive domain or several separable capabilities, which is what actually chooses between
+package-by-component and ports-and-adapters. Missing names decide nothing. Ask once, accept "not yet"
+the first time it is said, and move on.
 
 **Keep the session short.** Prefer defaults over questions, accept vague answers, and stop asking the
 moment you have enough to emit the docs. A scaffold that takes four exchanges is working correctly.
@@ -131,8 +134,23 @@ Native ships `android/` and `ios/` empty.
 
 Ask **one question**: what are you building, and what does it run on? A sentence or two.
 
-You need exactly enough to split the project into surfaces and match each to a profile. Nothing else
-learned in this step changes a single byte of what gets emitted.
+That answer has to yield exactly **two** things, and nothing else learned here changes what gets
+emitted:
+
+1. **The surfaces**, so each can be matched to a profile.
+2. **The shape** — whether this is *one cohesive domain* or *several separable capabilities*. This
+   decides package-by-component versus ports-and-adapters in step 1, and it is answerable from a
+   sentence without naming, defining, or designing anything.
+
+**Judging shape.** "A habit tracker where users log habits and see streaks" is one cohesive domain.
+"An internal platform for billing, inventory, and shipping" is several separable capabilities. The
+test is whether the thing decomposes into capabilities that could plausibly be owned, deployed, or
+extracted separately — **not** whether the user has named them. Most greenfield projects have no
+names *and* several capabilities; those are independent facts.
+
+If the sentence genuinely doesn't say, ask once, flatly: *does this break into a few separate
+capabilities, or is it one cohesive thing?* That is a question about shape, not about the product,
+and it is the only follow-up this step is allowed.
 
 **Most projects are not defined yet, and that is the normal case.** The user is starting something.
 They do not owe you a product description, and a scaffold does not need one. Do not ask what the
@@ -150,7 +168,8 @@ design session, which is the most common way this skill fails.
 If something in the description will genuinely matter to `specify` or `architect`, put it in the
 decision-log's **Parking lot** and say you did. Recorded, not acted on.
 
-Decompose the answer into surfaces, then confirm each one with the stack question below.
+Decompose the answer into surfaces, then confirm each one with the stack question below. Carry the
+shape judgement forward to step 1 — it is an input to #3, not something to re-litigate there.
 
 #### Decomposition
 
@@ -267,19 +286,31 @@ difference between a considered default and one you made up on the spot.
    package. No ADR covers it, so do not recommend one and do not label an option "Recommended". If
    there is only one app, default to a single package without asking. If there is more than one, ask
    where the user wants them, say there is no house preference, and follow the answer.
-2. **Bounded contexts** — do the capabilities already have obvious names? These become the top-level
-   component folders. Ask **once**, in one sentence, and offer "not yet" as a first-class answer.
-   For a new project "not yet" is the **expected** answer, not the fallback — treat naming them as
-   the special case, and phrase the question so declining costs the user nothing.
+2. **Bounded contexts** — do the capabilities already have obvious names? If so, they become the
+   top-level component folders. Ask **once**, in one sentence, and offer "not yet" as a first-class
+   answer. For a new project "not yet" is the **expected** answer, not the fallback — treat naming
+   them as the special case, and phrase the question so declining costs the user nothing.
+   **Names are colour, not a gate.** They seed folder names when offered and change nothing else. In
+   particular they do **not** decide the architecture — step 0's shape judgement already settled that,
+   and #3 reads it from there.
    If the user names some, keep them **coarse** — ADR-BASE-02 says start coarse and split, because
    re-slicing an existing boundary is the expensive case, and two or three is a fine start.
-   If the answer is "not yet", vague, or hesitant: **take it and move to #3.** Do not push, do not
-   suggest candidates, do not ask them to think it through. Codefall has an answer for exactly this
-   case and it is a good one — the project does not need domains to be scaffolded.
+   If the answer is "not yet", vague, or hesitant: **take it and move on.** Do not push, do not
+   suggest candidates, do not ask them to think it through. Package-by-component with components that
+   are not named yet is still package-by-component; the folders get their names from the first
+   capability that earns one.
 3. **Per-surface architecture** — package-by-component (the default) or ports-and-adapters?
-   ADR-BASE-02 names three conditions favoring p&a: boundaries genuinely unknown, one cohesive domain
-   rather than separable capabilities, or no service-extraction goal. If the answer to #2 was "don't
-   know", recommend p&a for that surface and amend ADR-BASE-02 accordingly.
+   Decide from **step 0's shape judgement**, never from whether #2 produced names. ADR-BASE-02 names
+   three conditions favoring p&a: boundaries genuinely unknown, one cohesive domain rather than
+   separable capabilities, or no service-extraction goal. Several separable capabilities means
+   package-by-component **even when nobody has named them yet**.
+   **"We haven't named them" is not one of those conditions**, and reading it as one hands p&a to
+   every greenfield project — which is every project this skill exists to scaffold. Not having names
+   is the normal starting state, not evidence of a single cohesive domain.
+   If p&a is chosen because the shape is genuinely *cohesive*, that is a real decision: amend
+   ADR-BASE-02 for that surface. If it is chosen because the shape is genuinely *unclear*, that is a
+   provisional call — leave ADR-BASE-02 alone and record it under `Open` in the decision log, per
+   step 2.
 4. **Depth** — docs only, docs + project files, or a runnable skeleton? Default to **docs only**
    unless the user wants more. See [Depth](#depth).
 
@@ -296,9 +327,10 @@ nominated is noise.
   profiles needs no subdirectories. Dated and Accepted, amended per the interview. Drop ADRs that
   don't apply — a backend-only project has no use for `ADR-TS-02`.
 - `docs/decision-log.md` — the in-flight scratchpad, with `Locked` / `Open` / `Parking lot`
-  sections. Seed `Open` with anything the interview surfaced but didn't settle, and `Parking lot`
-  with the product detail step 0 heard but deliberately did not act on. Parking it is how that input
-  reaches `specify` and `architect` instead of being lost.
+  sections. Seed `Open` with anything the interview surfaced but didn't settle — including a
+  provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as
+  though it were settled. Seed `Parking lot` with the product detail step 0 heard but deliberately did
+  not act on. Parking it is how that input reaches `specify` and `architect` instead of being lost.
 - A scoped `AGENTS.md` per app/package, from the skeleton: fill the name, the one-line description,
   fix the ADR links to the right relative path, delete the `<frontend only>` blocks on backend
   surfaces, and fill in Gotchas. Keep it terse — it links the ADRs and never restates the why.
@@ -336,8 +368,8 @@ facade-only imports, inward-only layers, cross-component via facades only, share
 import components, and inner rings can't touch the UI framework or gateways.
 
 How much tooling this takes depends on the language's visibility model, which is why the
-boundary-enforcement ADR is
-per-profile: TypeScript needs a linter because it has no `package-private`, while Kotlin `internal`,
+boundary-enforcement ADR is per-profile: TypeScript needs a linter because it has no
+`package-private`, while Kotlin `internal`,
 Rust `pub(crate)`, and Go's `internal/` packages do part of the job in the compiler. Part, not all —
 Go rejects import cycles but not outward ones, so the facade rules come free and the layer rule still
 needs a linter. Read the profile rather than assuming a language with real visibility needs nothing.
