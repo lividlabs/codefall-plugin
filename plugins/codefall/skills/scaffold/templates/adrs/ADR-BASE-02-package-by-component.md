@@ -53,7 +53,8 @@ pays off once boundaries are known.
 ## Consequences
 
 - The structure screams the domain, and component boundaries double as extraction (microservice)
-  seams.
+  seams — but only if ADR-BASE-03's rules hold. Clean imports alone do not make a component
+  extractable.
 - It asks you to commit to capability boundaries — **start coarse and split** as the domain
   clarifies; re-slicing an existing boundary is the expensive case.
 - Cross-component workflows go through facades / app-layer coordination rather than reaching across.
@@ -64,5 +65,6 @@ pays off once boundaries are known.
 ## Related
 
 - ADR-BASE-01 — Clean Architecture (the layers that nest inside each component)
+- ADR-BASE-03 — Extraction readiness (what makes the extraction-seam claim above true)
 - The matched profile's **boundary-enforcement** ADR (what makes the facades real)
 - Simon Brown, "The Missing Chapter"; R. C. Martin, "Screaming Architecture"

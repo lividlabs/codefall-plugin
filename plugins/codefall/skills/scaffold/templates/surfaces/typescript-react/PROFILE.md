@@ -143,7 +143,8 @@ example: the compiler covers the facade rules outright, and only the layer rule 
 - `adrs/ADR-TS-02-frontend-state.md` — **backend-only projects skip this one.**
 - `adrs/ADR-TS-03-boundary-enforcement.md`
 
-Shared ADR-BASE-01 and ADR-BASE-02 come from `templates/adrs/` and apply to every profile.
+Shared ADR-BASE-01 through ADR-BASE-03 come from `templates/adrs/` and apply to every profile.
+ADR-BASE-03 is dropped for a surface on ports-and-adapters, which has nothing to extract.
 
 ## Depth notes
 

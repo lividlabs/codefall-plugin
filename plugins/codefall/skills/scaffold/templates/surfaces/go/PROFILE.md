@@ -100,7 +100,8 @@ Numbering is per profile and starts at 01, so this profile has no gaps and no re
 other profile's numbers. `ADR-GO-01` and `ADR-TS-01` are different decisions that happen to sit first
 in their own sets.
 
-Shared ADR-BASE-01 and ADR-BASE-02 come from `templates/adrs/` and apply to every profile.
+Shared ADR-BASE-01 through ADR-BASE-03 come from `templates/adrs/` and apply to every profile.
+ADR-BASE-03 is dropped for a surface on ports-and-adapters, which has nothing to extract.
 
 ## Depth notes
 

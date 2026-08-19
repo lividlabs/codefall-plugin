@@ -54,14 +54,17 @@ Resolve them against that root — they are not relative to the user's project.
 ## The stance
 
 **Pure Clean Architecture organized package-by-component**, with boundaries **mechanically
-enforced**. That core is stack-agnostic and lives in `templates/adrs/` (ADR-BASE-01, ADR-BASE-02). Each
+enforced**, and **splittable** — a monolith whose components stay cheap to extract. That core is
+stack-agnostic and lives in `templates/adrs/` (ADR-BASE-01 through ADR-BASE-03). Each
 supported surface adds a profile under `templates/surfaces/<name>/` supplying its own ADRs. Read the
 ADRs before scaffolding — they are the substance of this skill, not decoration.
 
 In one paragraph: dependencies point inward only; the interfaces a use case needs live *with the use
 case* in `application/`, not in `domain/`; the top level is capabilities, not layers, each behind a
-facade with the Clean layers nested inside; a composition root per app binds implementations; and the
-facades are enforced by tooling, wired on day one. The surface profile fills in *which* tooling.
+facade with the Clean layers nested inside; a composition root per app binds implementations; the
+facades are enforced by tooling, wired on day one; and components stay independently extractable —
+each owns its data, no transaction spans two, and contracts cross facades rather than entities. The
+surface profile fills in *which* tooling.
 
 Vocabulary matters and is deliberate. Say **gateway**, not "port" or "adapter". Interfaces are the
 bare noun (`UserRepository`), implementations are qualified (`PostgresUserRepository`,
@@ -75,6 +78,7 @@ Stack-agnostic — every project gets these:
 | --- | --- |
 | `templates/adrs/ADR-BASE-01-clean-architecture.md` | The dependency rule and the four layers |
 | `templates/adrs/ADR-BASE-02-package-by-component.md` | Top-level organization; when to prefer p&a |
+| `templates/adrs/ADR-BASE-03-extraction-readiness.md` | Keeping components cheap to split out later |
 | `templates/adrs/_TEMPLATE.md` | Thin ADR template for new decisions |
 
 Per surface, under `templates/surfaces/<name>/` — a `PROFILE.md`, an `AGENTS.md.skeleton`, and the
@@ -141,6 +145,10 @@ emitted:
 2. **The shape** — whether this is *one cohesive domain* or *several separable capabilities*. This
    decides package-by-component versus ports-and-adapters in step 1, and it is answerable from a
    sentence without naming, defining, or designing anything.
+
+This is the same question ADR-BASE-03 exists to keep answerable later — whether a capability could
+be pulled out on its own. Asking it once at the start is cheaper than discovering the answer during
+an extraction.
 
 **Judging shape.** "A habit tracker where users log habits and see streaks" is one cohesive domain.
 "An internal platform for billing, inventory, and shipping" is several separable capabilities. The
@@ -333,10 +341,12 @@ nominated is noise.
 
 ### 2. Emit the docs — always
 
-- `docs/adrs/` — `ADR-BASE-01` and `ADR-BASE-02` plus every ADR the matched profiles supply, plus
+- `docs/adrs/` — `ADR-BASE-01` through `ADR-BASE-03` plus every ADR the matched profiles supply, plus
   `_TEMPLATE.md`. One flat directory: the prefixes keep them distinct, so a project matching two
   profiles needs no subdirectories. Dated and Accepted, amended per the interview. Drop ADRs that
-  don't apply — a backend-only project has no use for `ADR-TS-02`.
+  don't apply — a backend-only project has no use for `ADR-TS-02`, and a surface on
+  ports-and-adapters has no use for `ADR-BASE-03`, which exists to keep package-by-component's
+  components extractable.
 - `docs/decision-log.md` — the in-flight scratchpad, with `Locked` / `Open` / `Parking lot`
   sections. Seed `Open` with anything the interview surfaced but didn't settle — including a
   provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as

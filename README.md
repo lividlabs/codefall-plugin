@@ -18,11 +18,18 @@ an issue is a deliberate act, not something inferred from a passing remark.
 ### The stance
 
 **Pure Clean Architecture organized package-by-component**, with boundaries **mechanically
-enforced**. Dependencies point inward only; the interfaces a use case needs live with the use case in
-`application/`, not in `domain/`; the top level is capabilities, each behind a facade with the Clean
-layers nested inside; a composition root per app binds implementations.
+enforced** and components that stay **cheap to extract**. Dependencies point inward only; the
+interfaces a use case needs live with the use case in `application/`, not in `domain/`; the top level
+is capabilities, each behind a facade with the Clean layers nested inside; a composition root per app
+binds implementations.
 
-That core is stack-agnostic ([ADR-BASE-01, ADR-BASE-02](plugins/codefall/skills/scaffold/templates/adrs/)). Each surface adds
+The output is a **monolith on purpose** — one deployable, no network between use cases. What it is
+not is a monolith you are stuck with: each component owns its own data, no transaction spans two of
+them, and what crosses a facade is a contract rather than an entity. Pulling a component out later is
+a deployment change, not a redesign.
+
+That core is stack-agnostic ([ADR-BASE-01 through ADR-BASE-03](plugins/codefall/skills/scaffold/templates/adrs/)) — Clean
+Architecture, package-by-component, and keeping the resulting monolith cheap to split. Each surface adds
 a profile supplying its own ADRs under its own prefix — `ADR-TS-01` and up for `typescript-react`,
 which is Inversify, the TanStack Query / Zustand / `useState` split, and `eslint-plugin-boundaries`;
 `ADR-GO-01` and up for `go`. Numbering restarts per profile, so two profiles never collide, and a
@@ -92,7 +99,7 @@ plugins/
       scaffold/
         SKILL.md
         templates/
-          adrs/                     # stack-agnostic: ADR-BASE-01, ADR-BASE-02, _TEMPLATE
+          adrs/                     # stack-agnostic: ADR-BASE-01..03, _TEMPLATE
           surfaces/
             typescript-react/
               PROFILE.md            # prefix, fit, visibility model, toolchain, depth notes
