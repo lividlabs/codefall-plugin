@@ -10,6 +10,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | Skill | Does | Status |
 | --- | --- | --- |
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
+| [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
 
 Skills are **explicitly invoked** — `/scaffold`, `/specify`, and so on. Each carries
 `disable-model-invocation: true`, so none of them fire on their own; scaffolding a project or filing
@@ -81,6 +82,7 @@ The verbs chain: `scaffold` makes the project, `specify` states the problem,
 | `architect` | Write ADRs and tech specs, as GitHub issues or equivalent. |
 | `implement` | Write code for a tech spec. |
 | `review` | Review specs or code. Eventually multi-harness. |
+| `migrate` | Restructure code to a changed stance — architecture moves, component extraction. The code-refactor counterpart to `graft`, which moves only documents. |
 
 ## Layout
 
@@ -96,6 +98,9 @@ plugins/
     .claude-plugin/
       plugin.json     # plugin manifest
     skills/
+      graft/
+        SKILL.md
+        lineage.md                  # what every template used to be called; graft's rename record
       scaffold/
         SKILL.md
         templates/
