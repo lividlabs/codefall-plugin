@@ -8,6 +8,9 @@ allowed-tools:
   - Glob
   - Grep
   - AskUserQuestion
+  - Write
+  - Edit
+  - Bash
 ---
 
 # Scaffold
@@ -394,8 +397,48 @@ nominated is noise.
   `ADR-BASE-03`. That gate is about the surface, not its layout: such a project may still be
   package-by-component, and should be if it has separable capabilities. Having no *current* plan to
   split an extractable backend is not a reason to drop it.
+- `.codefall/scaffold.json` — **provenance**. Written every time, at every depth, and committed:
+  which version scaffolded a project is a team fact. It is machine-owned — nobody hand-edits it, and
+  editing it lies about history rather than changing a setting.
+
+  ```json
+  {
+    "pluginVersion": "0.4.0",
+    "scaffoldedAt": "2026-08-18",
+    "profiles": ["typescript-react"],
+    "decisions": {
+      "shape": "several-capabilities",
+      "architecture": "package-by-component",
+      "topology": { "typescript-react": "nextjs" },
+      "depth": "docs-only"
+    },
+    "adrs": [
+      { "id": "ADR-BASE-01", "file": "docs/adrs/ADR-BASE-01-clean-architecture.md",
+        "amended": false, "sha256": "…" }
+    ]
+  }
+  ```
+
+  Read `pluginVersion` from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — do not guess it.
+  `shape` is one of `one-cohesive-domain`, `several-capabilities`, `unclear`; `depth` is
+  `docs-only`, `project-files`, or `runnable-skeleton`; `topology` has one entry per React surface
+  and is omitted where a profile has no topologies.
+
+  **`amended` is the field that earns this file.** Only this step can record it honestly, because you
+  are the one doing the amending — reconstructing it later would mean diffing against the exact
+  template version that emitted the file, which means keeping every historical version reachable.
+  `sha256` covers the other case: an ADR hand-edited months after scaffolding. Together they separate
+  *untouched*, *amended during the interview*, and *edited since*, and only the first is ever safe for
+  a later tool to update automatically.
+
+  **Never invent a hash.** Compute it with `shasum -a 256 <file>` after the file is written. A
+  plausible-looking wrong hash is worse than none: it marks an untouched file as edited, or an edited
+  one as pristine.
 - `docs/decision-log.md` — the in-flight scratchpad, with `Locked` / `Open` / `Parking lot`
-  sections. Seed `Open` with anything the interview surfaced but didn't settle — including a
+  sections. Open `Locked` with one line recording the scaffold — "scaffolded with codefall
+  `<version>` on `<date>`" — so provenance is visible to someone reading docs. `.codefall/scaffold.json`
+  stays authoritative; this line is for humans.
+  Seed `Open` with anything the interview surfaced but didn't settle — including a
   provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as
   though it were settled. Seed `Parking lot` with the product detail step 1 heard but deliberately did
   not act on. Parking it is how that input reaches `specify` and `architect` instead of being lost.
@@ -454,7 +497,8 @@ that every ADR cross-link and every `AGENTS.md` link resolves.
 
 - The surfaces identified and the profile matched to each.
 - The interview answers, as the decisions now recorded.
-- Any ADR amended, and what changed.
+- Any ADR amended, and what changed — this is what `.codefall/scaffold.json` records as `amended`,
+  so the report and the file must agree.
 - Files created.
 - What the user still owes the project — always including boundary enforcement if it isn't wired.
 
