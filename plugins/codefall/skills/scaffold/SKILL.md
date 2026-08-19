@@ -38,10 +38,16 @@ they're building, that is context for matching a profile and judging shape — n
 design it.
 
 **Not having named the domains yet is normal and fine**, and it is not the same as not having any.
-A project can be scaffolded before anyone has picked names; step 0 judges whether the thing is one
+A project can be scaffolded before anyone has picked names; step 1 judges whether the thing is one
 cohesive domain or several separable capabilities, which is what actually chooses between
 package-by-component and ports-and-adapters. Missing names decide nothing. Ask once, accept "not yet"
 the first time it is said, and move on.
+
+**The stack is yours; the stance is not.** Codefall has no opinion about which supported language or
+framework a project uses and will not steer toward one — see the stack question. It does not bend on
+the architecture. The ADRs ship Accepted because installing them is the entire point of this skill,
+so a user who wants different layering, package-by-layer, or no boundary enforcement is asking for
+something `scaffold` does not do. Say so plainly rather than compromising the stance to fit.
 
 **Keep the session short.** Prefer defaults over questions, accept vague answers, and stop asking the
 moment you have enough to emit the docs. A scaffold that takes four exchanges is working correctly.
@@ -78,7 +84,7 @@ Stack-agnostic — every project gets these:
 | --- | --- |
 | `templates/adrs/ADR-BASE-01-clean-architecture.md` | The dependency rule and the four layers |
 | `templates/adrs/ADR-BASE-02-package-by-component.md` | Top-level organization; when to prefer p&a |
-| `templates/adrs/ADR-BASE-03-extraction-readiness.md` | Keeping components cheap to split out later |
+| `templates/adrs/ADR-BASE-03-extraction-readiness.md` | Keeping components cheap to split out later — **surfaces that can never be split skip this one** |
 | `templates/adrs/_TEMPLATE.md` | Thin ADR template for new decisions |
 
 Per surface, under `templates/surfaces/<name>/` — a `PROFILE.md`, an `AGENTS.md.skeleton`, and the
@@ -134,7 +140,7 @@ Native ships `android/` and `ios/` empty.
 
 ## Process
 
-### 0. Describe and match — the gate
+### 1. Describe and match — the gate
 
 Ask **one question**: what are you building, and what does it run on? A sentence or two.
 
@@ -143,7 +149,7 @@ emitted:
 
 1. **The surfaces**, so each can be matched to a profile.
 2. **The shape** — whether this is *one cohesive domain* or *several separable capabilities*. This
-   decides package-by-component versus ports-and-adapters in step 1, and it is answerable from a
+   decides package-by-component versus ports-and-adapters in step 3, and it is answerable from a
    sentence without naming, defining, or designing anything.
 
 This is the same question ADR-BASE-03 exists to keep answerable later — whether a capability could
@@ -159,6 +165,10 @@ names *and* several capabilities; those are independent facts.
 If the sentence genuinely doesn't say, ask once, flatly: *does this break into a few separate
 capabilities, or is it one cohesive thing?* That is a question about shape, not about the product,
 and it is the only follow-up this step is allowed.
+
+If that follow-up still doesn't settle it, **record the shape as unclear and move on.** Do not ask
+again and do not guess — step 3 handles an unclear shape as a provisional choice rather than a
+decided one.
 
 **Most projects are not defined yet, and that is the normal case.** The user is starting something.
 They do not owe you a product description, and a scaffold does not need one. Do not ask what the
@@ -177,12 +187,12 @@ If something in the description will genuinely matter to `specify` or `architect
 decision-log's **Parking lot** and say you did. Recorded, not acted on.
 
 Decompose the answer into surfaces, then confirm each one with the stack question below. Carry the
-shape judgement forward to step 1 — it is an input to #3, not something to re-litigate there.
+shape judgement forward to step 3 — it is an input to #3, not something to re-litigate there.
 
 **Note any rendering signal without asking for one.** If the description mentions public pages,
 sharing, browsing without an account, or search visibility, that decides a React surface's topology
-in #1 below. Don't go looking for it — the question belongs there, and only if the description was
-silent.
+in step 3's question #1. Don't go looking for it — the question belongs there, and only if the
+description was silent.
 
 #### Decomposition
 
@@ -212,7 +222,21 @@ one.
 
 #### The stack question
 
-Offer **one option per supported profile**, and nothing else:
+**Name the profile the description already implies, and confirm it.** "A React app" implies
+`typescript-react`; "a CLI in Go" implies `go`. Say which you matched and give the user a plain way
+to say otherwise.
+
+**Only where the description actually decided.** "A website" decides the *frontend* — that is
+`typescript-react` — and says nothing about what serves it. Confirm the part that was decided and ask
+about the part that wasn't; assuming a Node backend because the frontend is React is exactly the
+steering this skill promises not to do.
+
+**Do not present every supported profile as a co-equal menu** where one was clearly named. Offering
+`go` beside `typescript-react` for "a React app" invites a choice the user already made, and implies
+the two are equally indicated when they are not.
+
+Ask with the full list **only when the description genuinely leaves it open** — "an API", "a
+service", "a background worker" with no language named. Then there is a real choice, and it is:
 
 - `typescript-react` — TypeScript/Node backends, React frontends (web and Native), and Tauri or
   Electron apps whose native side is only wiring
@@ -220,7 +244,8 @@ Offer **one option per supported profile**, and nothing else:
 - **None of these**
 
 That list is generated from the catalog. When a profile moves from planned to supported it gains an
-option; until then it has none.
+option; until then it has none. The rule that matters is not *how many* supported profiles you show
+— it is that **you never show one that isn't supported**.
 
 **Never list a planned profile as an option.** `rust-native`, `python`, `dart-flutter` and the rest
 are not available, so offering them and then refusing spends the user's choice on nothing. An option
@@ -259,14 +284,29 @@ If the user, having been told, explicitly asks for what *is* covered — the sta
 the supported surfaces alone — that is theirs to choose. Emit it, and state plainly which surfaces
 were left undecided and that their boundary-enforcement obligation is unmet.
 
-### 0b. Seams — for composed projects only
+### 2. Seams — only when a client owns domain logic
 
-Skip this when the decomposition found one surface. A thin-shell Tauri app has an IPC boundary but
-not a seam in this sense: the domain lives in one place, and `invoke` is just a gateway
-implementation like any HTTP client.
+**Start from the default: the domain lives on the server.** A browser, a thin native shell, or any
+client that renders and calls an API is not a second domain-bearing surface. It holds no entities and
+no use cases of its own, so there is no seam — a `fetch`, an `invoke`, and a platform channel are all
+gateway implementations, and ADR-BASE-01 already decides how they are treated.
 
-Two or more **domain-bearing** surfaces is a different matter, and profiles deliberately don't decide
-the boundary. Where they meet, settle:
+That covers most projects, including every ordinary web app. **Skip this step unless a client holds
+domain logic of its own**, which happens in three recognisable cases:
+
+- **Offline-capable mobile or desktop apps.** A client that must decide, validate, and reconcile
+  without asking the server is running domain rules, not rendering someone else's.
+- **Games.** In-game simulation cannot round-trip, so the rules live on the client — while accounts,
+  inventory, and progression usually live on the server. Two domains, genuinely.
+- **No server at all.** A standalone SPA, a CLI, a local-only tool. Then the client *is* the whole
+  app: one surface, and still no seam.
+
+The third case is a reminder that two *processes* are not two domains, and one process is never two.
+Ask directly rather than inferring it from the file listing: *does this client decide anything on its
+own, or does it always ask?*
+
+When a client genuinely does hold domain logic, the profiles deliberately don't decide the boundary.
+Where the two meet, settle:
 
 - **Which side owns the domain.** In a fat-shell Tauri app or a Flutter-plus-API project the entities
   can live on either side, or — badly — on both. Pick one and write it down.
@@ -279,12 +319,16 @@ from `_TEMPLATE.md`. This is the one place
 `scaffold` writes a genuinely new decision rather than instantiating a template — so draft it, then
 have the user confirm it before writing.
 
-### 1. Interview
+### 3. Interview
 
-The templates deliberately don't decide three things — they are per-project calls, and they change
+The templates deliberately don't decide four things — they are per-project calls, and they change
 what gets emitted. Ask; do not guess. **Batch all of it into one round of questions**, not a
 conversation. Every item below has a workable default, so a user who answers none of them still gets
 a correct scaffold.
+
+**One of the four is not a question.** #3 is read from step 1's shape judgement — say which
+architecture you are using and why, do not ask the user to pick it. The other three are asked, along
+with the destination below.
 
 **Recommend only what an ADR supports.** Where a decision traces to an ADR, say so and name the
 recommendation — that is the ADR doing its job. Where Codefall has no stance, present the options
@@ -292,7 +336,7 @@ flat, say plainly that there is no house opinion, and let the user choose. A "(R
 with no ADR behind it invents an opinion this project does not hold, and the user cannot tell the
 difference between a considered default and one you made up on the spot.
 
-1. **App topology** — how many apps? Mostly answered already by step 0's surfaces. Per the matched
+1. **App topology** — how many apps? Mostly answered already by step 1's surfaces. Per the matched
    profile's dependency-injection ADR each app gets its own composition root, and therefore its own
    `AGENTS.md`.
    Codefall has **no opinion on repo layout** — monorepo or separate repos, workspaces or a single
@@ -301,7 +345,7 @@ difference between a considered default and one you made up on the spot.
    where the user wants them, say there is no house preference, and follow the answer.
    **Also settle the topology of each React surface** — SPA plus a separate API, or a Next.js SSR
    shell. The profile describes both and the choice turns on one question: does anything need to be
-   publicly reachable and worth indexing? If step 0's description already answered that, take it and
+   publicly reachable and worth indexing? If step 1's description already answered that, take it and
    do not ask again. If it was silent, ask exactly that question once — not "do you want Next.js",
    which invites a preference where there is a criterion. Default to SPA plus API when the answer is
    no.
@@ -310,7 +354,7 @@ difference between a considered default and one you made up on the spot.
    answer. For a new project "not yet" is the **expected** answer, not the fallback — treat naming
    them as the special case, and phrase the question so declining costs the user nothing.
    **Names are colour, not a gate.** They seed folder names when offered and change nothing else. In
-   particular they do **not** decide the architecture — step 0's shape judgement already settled that,
+   particular they do **not** decide the architecture — step 1's shape judgement already settled that,
    and #3 reads it from there.
    If the user names some, keep them **coarse** — ADR-BASE-02 says start coarse and split, because
    re-slicing an existing boundary is the expensive case, and two or three is a fine start.
@@ -319,7 +363,7 @@ difference between a considered default and one you made up on the spot.
    are not named yet is still package-by-component; the folders get their names from the first
    capability that earns one.
 3. **Per-surface architecture** — package-by-component (the default) or ports-and-adapters?
-   Decide from **step 0's shape judgement**, never from whether #2 produced names. ADR-BASE-02 names
+   Decide from **step 1's shape judgement**, never from whether #2 produced names. ADR-BASE-02 names
    two conditions favoring p&a: one cohesive domain rather than separable capabilities, or boundaries
    genuinely unknown. Several separable capabilities means package-by-component **even when nobody
    has named them yet**, and **even when the project will never be deployed as separate services** —
@@ -330,7 +374,7 @@ difference between a considered default and one you made up on the spot.
    If p&a is chosen because the shape is genuinely *cohesive*, that is a real decision: amend
    ADR-BASE-02 for that surface. If it is chosen because the shape is genuinely *unclear*, that is a
    provisional call — leave ADR-BASE-02 alone and record it under `Open` in the decision log, per
-   step 2.
+   step 4.
 4. **Depth** — docs only, docs + project files, or a runnable skeleton? Default to **docs only**
    unless the user wants more. See [Depth](#depth).
 
@@ -340,7 +384,7 @@ questions, and only then check the chosen target: never scaffold into a non-empt
 saying so first, and never overwrite an existing path. A warning about a directory the user never
 nominated is noise.
 
-### 2. Emit the docs — always
+### 4. Emit the docs — always
 
 - `docs/adrs/` — `ADR-BASE-01` through `ADR-BASE-03` plus every ADR the matched profiles supply, plus
   `_TEMPLATE.md`. One flat directory: the prefixes keep them distinct, so a project matching two
@@ -353,16 +397,17 @@ nominated is noise.
 - `docs/decision-log.md` — the in-flight scratchpad, with `Locked` / `Open` / `Parking lot`
   sections. Seed `Open` with anything the interview surfaced but didn't settle — including a
   provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as
-  though it were settled. Seed `Parking lot` with the product detail step 0 heard but deliberately did
+  though it were settled. Seed `Parking lot` with the product detail step 1 heard but deliberately did
   not act on. Parking it is how that input reaches `specify` and `architect` instead of being lost.
 - A scoped `AGENTS.md` per app/package, from the skeleton: fill the name, the one-line description,
   fix the ADR links to the right relative path, delete the `<frontend only>` blocks on backend
-  surfaces, and fill in Gotchas. Keep it terse — it links the ADRs and never restates the why.
+  surfaces, delete the `<never-splittable>` block and its ADR-BASE-03 link on a surface that can never
+  be split, and fill in Gotchas. Keep it terse — it links the ADRs and never restates the why.
 
 If the harness in use reads `CLAUDE.md` rather than `AGENTS.md`, add `CLAUDE.md` as a one-line
 pointer to `AGENTS.md`. Do not maintain two copies of the rules.
 
-### 3. Emit code — per the depth answer
+### 5. Emit code — per the depth answer
 
 #### Depth
 
@@ -398,14 +443,14 @@ Rust `pub(crate)`, and Go's `internal/` packages do part of the job in the compi
 Go rejects import cycles but not outward ones, so the facade rules come free and the layer rule still
 needs a linter. Read the profile rather than assuming a language with real visibility needs nothing.
 
-### 4. Verify
+### 6. Verify
 
 Whatever you emitted must actually work. If there are project files, run install, lint, and test —
 and confirm the boundary rules **fail on a deliberate violation**, because a lint config that
 catches nothing is the common failure here. Do not assume; run it. If there are only docs, check
 that every ADR cross-link and every `AGENTS.md` link resolves.
 
-### 5. Report
+### 7. Report
 
 - The surfaces identified and the profile matched to each.
 - The interview answers, as the decisions now recorded.
