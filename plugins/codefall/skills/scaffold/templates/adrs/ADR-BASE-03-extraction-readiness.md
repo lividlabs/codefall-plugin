@@ -28,9 +28,18 @@ of a use case, one transaction where the domain wants one, one place to run and 
 here is not to distribute anything. It is to keep the *option* cheap, so that extracting a component
 later is a deployment change rather than a redesign.
 
-This ADR applies where package-by-component was chosen. A project on ports-and-adapters has one
-cohesive domain and nothing to extract; ADR-BASE-02 names "no service-extraction goal" as a condition
-for that choice in the first place.
+**This ADR is gated on whether the surface could ever be split at all**, not on which layout was
+chosen. A backend or service can be: keep these rules whether or not anyone currently intends to
+split it, because intentions are revisable and coupling built in the meantime is not. A CLI, desktop
+app, mobile app, or library cannot — there is no service to extract to, so the rules have no referent
+and their cost buys nothing.
+
+Note what does *not* gate it. Having no current appetite for microservices is not a reason to skip
+these rules; ADR-BASE-02 is explicit that a missing extraction goal is not even a reason to abandon
+package-by-component. And a surface on ports-and-adapters has no component boundaries to talk about
+yet, so the rules are not actionable there — but if it grows into components as ADR-BASE-02 expects,
+they apply from that moment, and the decisions made in the meantime are what make that growth cheap
+or expensive.
 
 ## Decision
 
@@ -101,14 +110,16 @@ The same principle applies where micro-frontends are a possibility, and the fail
   unacceptable, that is a real finding and belongs in the decision log with the reason.
 - Denormalised reads become normal: a component keeps the small projection of another's data it needs
   rather than joining for it.
-- **Most of these rules are not mechanically enforceable**, which is a genuine weakness compared with
-  the import rules the boundary-enforcement ADR covers. Some can be checked — the types crossing a
-  facade, cross-schema references in migrations, imports of a shared data module. Transaction spans
-  and synchronous-versus-event judgement cannot be, and stay review concerns.
+- **Most of these rules are review concerns rather than lint rules.** Some can be checked — the types
+  crossing a facade, cross-schema references in migrations, imports of a shared data module.
+  Transaction spans and synchronous-versus-event judgement cannot be, and are decided by people. That
+  is the normal condition of architectural guidance, not a defect in it.
 - Because enforcement is partial, the decision log carries the weight: a knowingly broken rule that is
   written down is a debt, and one that is not is a trap.
-- On a project that will genuinely never split, these rules cost something and return nothing. That
-  project should be on ports-and-adapters, and this ADR should not have been emitted for it.
+- On a surface that cannot be split at all — a CLI, a desktop or mobile app, a library — the rules
+  have nothing to refer to and this ADR should not have been emitted. That is a question about the
+  surface, not about its layout: such a project may still be package-by-component, and should be if
+  it has separable capabilities.
 
 ## Related
 

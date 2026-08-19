@@ -101,7 +101,8 @@ other profile's numbers. `ADR-GO-01` and `ADR-TS-01` are different decisions tha
 in their own sets.
 
 Shared ADR-BASE-01 through ADR-BASE-03 come from `templates/adrs/` and apply to every profile.
-ADR-BASE-03 is dropped for a surface on ports-and-adapters, which has nothing to extract.
+ADR-BASE-03 is dropped only for a surface that could never be split into services at all — a CLI,
+a desktop or mobile app, a library — not for one that merely has no current plan to split.
 
 ## Depth notes
 

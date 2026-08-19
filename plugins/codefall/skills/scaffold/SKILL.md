@@ -320,9 +320,10 @@ difference between a considered default and one you made up on the spot.
    capability that earns one.
 3. **Per-surface architecture** — package-by-component (the default) or ports-and-adapters?
    Decide from **step 0's shape judgement**, never from whether #2 produced names. ADR-BASE-02 names
-   three conditions favoring p&a: boundaries genuinely unknown, one cohesive domain rather than
-   separable capabilities, or no service-extraction goal. Several separable capabilities means
-   package-by-component **even when nobody has named them yet**.
+   two conditions favoring p&a: one cohesive domain rather than separable capabilities, or boundaries
+   genuinely unknown. Several separable capabilities means package-by-component **even when nobody
+   has named them yet**, and **even when the project will never be deployed as separate services** —
+   the payoff is encapsulation, not deployment.
    **"We haven't named them" is not one of those conditions**, and reading it as one hands p&a to
    every greenfield project — which is every project this skill exists to scaffold. Not having names
    is the normal starting state, not evidence of a single cohesive domain.
@@ -344,9 +345,11 @@ nominated is noise.
 - `docs/adrs/` — `ADR-BASE-01` through `ADR-BASE-03` plus every ADR the matched profiles supply, plus
   `_TEMPLATE.md`. One flat directory: the prefixes keep them distinct, so a project matching two
   profiles needs no subdirectories. Dated and Accepted, amended per the interview. Drop ADRs that
-  don't apply — a backend-only project has no use for `ADR-TS-02`, and a surface on
-  ports-and-adapters has no use for `ADR-BASE-03`, which exists to keep package-by-component's
-  components extractable.
+  don't apply — a backend-only project has no use for `ADR-TS-02`, and a surface that could never be
+  split into services at all (a CLI, a desktop or mobile app, a library) has no use for
+  `ADR-BASE-03`. That gate is about the surface, not its layout: such a project may still be
+  package-by-component, and should be if it has separable capabilities. Having no *current* plan to
+  split an extractable backend is not a reason to drop it.
 - `docs/decision-log.md` — the in-flight scratchpad, with `Locked` / `Open` / `Parking lot`
   sections. Seed `Open` with anything the interview surfaced but didn't settle — including a
   provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as
