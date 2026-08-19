@@ -504,10 +504,9 @@ that every ADR cross-link and every `AGENTS.md` link resolves.
 
 ## Conventions
 
-- Skills in this plugin are named as **verbs** (`scaffold`, not `scaffolder`).
-- One skill per directory: `skills/<verb>/SKILL.md`.
-- Renaming, moving, or retiring a template requires a row in `skills/graft/lineage.md`, in the same
-  PR — `graft` can only tell a rename from a deletion plus an addition because that record exists.
+Repo-wide rules — verb naming, one skill per directory, template lineage upkeep, ADR immutability
+— live in the plugin repo's root `AGENTS.md`. Specific to this skill:
+
 - The doc workflow this seeds: **discuss → decision-log → ADR → scoped AGENTS.md → code.** The
   decision-log holds detail while a decision is moving; the ADR holds the settled decision *and its
   why*; `AGENTS.md` holds the terse operative rules and links back. `architect` picks up from here.
