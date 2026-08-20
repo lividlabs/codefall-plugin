@@ -34,9 +34,12 @@ The why lives in the ADRs. This file is the operative rules only — never resta
 
 ## DI
 
-- `samber/do`, one injector per app, built in the composition root. It is the only place naming
-  concrete implementations.
-- **The provider returns the interface, never the concrete type:**
+- `samber/do`, one injector per app, built in the composition root. Each component exports a
+  registration function from its facade package; the root calls it. A component's concrete types
+  are named only there — `main` cannot import `internal/<component>/internal/*`, so the compiler
+  enforces this.
+- **The provider returns the interface, never the concrete type** — in the component's
+  registration function, not in `main`:
 
   ```go
   do.Provide(injector, func(i do.Injector) (application.OrderRepository, error) {

@@ -16,8 +16,8 @@ a container. For TypeScript, **Inversify** is the mature IoC container and handl
 ### Container
 
 - **Inversify** across all TypeScript packages. **One composition root per app**; library packages
-  export `ContainerModule`s the app's root loads. The composition root is the only place that names
-  concrete implementations.
+  export `ContainerModule`s the app's root loads. Concrete classes are named in each package's
+  `ContainerModule`; the app's root only loads modules.
 - On the **Next.js topology** the root is a module, not an entry point, because every route handler
   is its own entry. Build the container once at module load and cache it on `globalThis`, so dev
   hot-reload does not rebuild it per request:
