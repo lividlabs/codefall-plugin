@@ -18,12 +18,18 @@ never restates the reasoning.
 - Named as **verbs** (`scaffold`, `graft`), one directory each:
   `plugins/codefall/skills/<verb>/SKILL.md`.
 - Every skill carries `disable-model-invocation: true`. Running one is a deliberate act.
+  The field is Claude Code's; harnesses that read the skills through `.agents/skills/`
+  ignore it and may invoke them on their own initiative.
 - A skill reports and offers; it applies only what the user takes. Nothing lands unrequested.
 - Never present an option that would be refused — unsupported stacks and planned profiles are
   exits, not menu choices. See the stack question in `scaffold`'s SKILL.md.
 - Renaming, moving, or retiring a template ships a row in
   `plugins/codefall/skills/graft/lineage.md`, in the same PR. `graft` can only tell a rename from
   a deletion plus an addition because that record exists.
+- A new skill ships its `.agents/skills/<verb>` symlink in the same PR. The links point inward
+  at `plugins/codefall/skills/<verb>`, never the reverse — the plugin publishes as a
+  `git-subdir` rooted at `plugins/codefall`, so a link escaping that subtree dangles for
+  every install. See `.agents/skills/README.md`.
 - New skill prose matches the established register — declarative, reasons attached, refusals
   stated plainly. Read `scaffold`'s SKILL.md end to end before writing one.
 
@@ -43,3 +49,6 @@ never restates the reasoning.
 - Add this repo as a marketplace from its local path and install `codefall-dev` — it runs from
   the working tree (see `.claude-plugin/marketplace.json`). The `codefall` entry serves only the
   released commit it pins, so real installs never see unreleased work.
+- Outside Claude Code, a harness that reads `.agents/skills/` picks both skills up straight
+  from the checkout — those symlinks resolve into the working tree, so there is nothing to
+  install.
