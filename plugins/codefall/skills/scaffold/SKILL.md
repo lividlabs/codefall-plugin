@@ -21,7 +21,7 @@ Scaffold's minimum output is **documentation** — the ADRs that fix the archite
 `AGENTS.md` files that make them operative. Code is optional and additive on top of that.
 
 Scaffolding is not implementing. Once the decisions are recorded and the project is green and empty,
-stop. Features go through `specify` → `architect` → `implement`.
+stop. Features go through `specify` → `design` → `implement`.
 
 ## Scope — how, not what
 
@@ -55,7 +55,7 @@ something `scaffold` does not do. Say so plainly rather than compromising the st
 **Keep the session short.** Prefer defaults over questions, accept vague answers, and stop asking the
 moment you have enough to emit the docs. A scaffold that takes four exchanges is working correctly.
 If you find yourself on a long thread about how the thing will work, you are in `specify` and
-`architect` territory — say so, and finish scaffolding.
+`design` territory — say so, and finish scaffolding.
 
 Template paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}/skills/scaffold/templates/`.
 Resolve them against that root — they are not relative to the user's project.
@@ -186,7 +186,7 @@ What is not fine: asking a follow-up about a feature, proposing entities or a sc
 how something will behave, or letting product detail reach the ADRs. Those turn a description into a
 design session, which is the most common way this skill fails.
 
-If something in the description will genuinely matter to `specify` or `architect`, put it in the
+If something in the description will genuinely matter to `specify` or `design`, put it in the
 decision-log's **Parking lot** and say you did. Recorded, not acted on.
 
 Decompose the answer into surfaces, then confirm each one with the stack question below. Carry the
@@ -441,7 +441,7 @@ nominated is noise.
   Seed `Open` with anything the interview surfaced but didn't settle — including a
   provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as
   though it were settled. Seed `Parking lot` with the product detail step 1 heard but deliberately did
-  not act on. Parking it is how that input reaches `specify` and `architect` instead of being lost.
+  not act on. Parking it is how that input reaches `specify` and `design` instead of being lost.
 - A scoped `AGENTS.md` per app/package, from the skeleton: fill the name, the one-line description,
   fix the ADR links to the right relative path, delete the `<frontend only>` blocks on backend
   surfaces, delete the `<never-splittable>` block and its ADR-BASE-03 link on a surface that can never
@@ -509,4 +509,4 @@ Repo-wide rules — verb naming, one skill per directory, template lineage upkee
 
 - The doc workflow this seeds: **discuss → decision-log → ADR → scoped AGENTS.md → code.** The
   decision-log holds detail while a decision is moving; the ADR holds the settled decision *and its
-  why*; `AGENTS.md` holds the terse operative rules and links back. `architect` picks up from here.
+  why*; `AGENTS.md` holds the terse operative rules and links back. `design` picks up from here.
