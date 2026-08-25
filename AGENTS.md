@@ -21,18 +21,30 @@ never restates the reasoning.
 - A skill reports and offers; it applies only what the user takes. Nothing lands unrequested.
 - Never present an option that would be refused — unsupported stacks and planned profiles are
   exits, not menu choices. See the stack question in `scaffold`'s SKILL.md.
+- Every verb reads `.codefall/skills/<verb>/CUSTOMIZE.md` from the user's project when it exists —
+  project procedure the plugin cannot know. Copy the paragraph from `specify`'s SKILL.md verbatim;
+  factor it into `shared/` once three verbs carry it.
 - Renaming, moving, or retiring a template ships a row in
   `plugins/codefall/skills/graft/lineage.md`, in the same PR. `graft` can only tell a rename from
   a deletion plus an addition because that record exists.
 - New skill prose matches the established register — declarative, reasons attached, refusals
   stated plainly. Read `scaffold`'s SKILL.md end to end before writing one.
 
+## Prose
+
+- Banned jargon, everywhere — docs, skills, ADRs, commit messages, PR bodies: *arm*,
+  *load-bearing*, *honest* and *honestly*, and *fork* unless it means a GitHub fork. Plain words
+  instead: option, important, accurate, explicit.
+
 ## Workflow
 
 - All work happens on a branch or worktree, never directly on `main` — a ruleset forbids pushing
-  it anyway. Every change lands through a PR.
+  it anyway. Pull `main` before branching. Every change lands through a PR.
 - Stacked branches are fine, and the right way to break large work into smaller reviewable
   pieces. Check `gh pr list` before basing new work.
+- Documentation is part of the work, not a follow-up. Before calling a change done, check
+  `README.md`, `AGENTS.md`, `docs/`, and every skill the change touches, and land the updates as
+  their own commit in the same PR.
 - Conventional commits, with a body that says *why*. release-please reads the types
   (`release-please-config.json` maps them to changelog sections).
 - release-please owns `CHANGELOG.md` and the `version` in
