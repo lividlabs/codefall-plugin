@@ -6,6 +6,18 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.5.0](https://github.com/lividlabs/codefall-plugin/compare/v0.4.1...v0.5.0) (2026-08-25)
+
+
+### Features
+
+* add the specify skill with a GitHub tracker profile ([#35](https://github.com/lividlabs/codefall-plugin/issues/35)) ([31f9cfa](https://github.com/lividlabs/codefall-plugin/commit/31f9cfa8d400a135351886c1f6f111f229e8c163))
+
+
+### Refactoring
+
+* rename the architect verb to design ([#34](https://github.com/lividlabs/codefall-plugin/issues/34)) ([84a22c0](https://github.com/lividlabs/codefall-plugin/commit/84a22c01e3a114170660ea95e591131b9b4013e9))
+
 ## [0.4.1](https://github.com/lividlabs/codefall-plugin/compare/v0.4.0...v0.4.1) (2026-08-20)
 
 
