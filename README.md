@@ -11,6 +11,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | --- | --- | --- |
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
+| [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: user stories with numbered, testable acceptance criteria, written into the issue tracker. | in progress |
 
 Skills are **explicitly invoked** — `/scaffold`, `/specify`, and so on. Each carries
 `disable-model-invocation: true`, so none of them fire on their own; scaffolding a project or filing
@@ -73,12 +74,12 @@ language or scaffold only the half that fits. A profile counts as supported once
 
 ## Roadmap
 
-The verbs chain: `scaffold` makes the project, `specify` states the problem,
-`design` decides the shape, `implement` writes it, `review` checks it.
+The verbs chain: `scaffold` makes the project, `specify` states the problem, `mock-up` shows what
+it looks like, `design` decides the shape, `implement` writes it, `review` checks it.
 
 | Verb | Does |
 | --- | --- |
-| `specify` | Write a GitHub issue for a bug or feature. |
+| `mock-up` | Import a mockup exported from a design tool, or author one when there isn't one. Runs before or after `specify`; an issue labelled `requires-mockup` is blocked until it does. |
 | `design` | Turn a specification into a technical design and a work breakdown; the tickets land in Beads, with their dependencies, as a graph. |
 | `implement` | Write code for a tech spec. |
 | `review` | Review specs or code. Eventually multi-harness. |
@@ -97,6 +98,8 @@ plugins/
   codefall/           # the plugin; this subtree is what gets installed
     .claude-plugin/
       plugin.json     # plugin manifest
+    shared/
+      import-mockup.md            # one import procedure, used by specify and mock-up
     skills/
       graft/
         SKILL.md
@@ -114,6 +117,11 @@ plugins/
               PROFILE.md
               adrs/                 # ADR-GO-01..03
               AGENTS.md.skeleton
+      specify/
+        SKILL.md
+        trackers/
+          github/
+            PROFILE.md            # capabilities, field mapping, two-pass issue creation
 ```
 
 Within the plugin, `skills/`, `commands/`, `agents/`, and `hooks/hooks.json` are auto-discovered by

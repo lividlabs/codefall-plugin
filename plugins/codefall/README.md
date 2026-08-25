@@ -9,6 +9,8 @@ tooling, the repo README — is packaging and does not ship to users.
 | Skill | Does |
 | --- | --- |
 | [`scaffold`](skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. |
+| [`graft`](skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. |
+| [`specify`](skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: user stories with numbered, testable acceptance criteria, written into the issue tracker. |
 
 Skills are explicitly invoked and carry `disable-model-invocation: true`, so none fire on their own.
 
