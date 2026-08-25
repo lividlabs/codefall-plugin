@@ -160,7 +160,7 @@ consult, a question this project always asks, a section every issue carries, a s
 creating.
 
 It extends this skill and never relaxes it: **Rules** below holds regardless. A customization that
-would suspend one is asking for a fork — say so and stop.
+would suspend one is asking for a different skill — say so and stop.
 
 ## Process
 

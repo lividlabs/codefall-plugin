@@ -30,12 +30,21 @@ never restates the reasoning.
 - New skill prose matches the established register — declarative, reasons attached, refusals
   stated plainly. Read `scaffold`'s SKILL.md end to end before writing one.
 
+## Prose
+
+- Banned jargon, everywhere — docs, skills, ADRs, commit messages, PR bodies: *arm*,
+  *load-bearing*, *honest* and *honestly*, and *fork* unless it means a GitHub fork. Plain words
+  instead: option, important, accurate, explicit.
+
 ## Workflow
 
 - All work happens on a branch or worktree, never directly on `main` — a ruleset forbids pushing
-  it anyway. Every change lands through a PR.
+  it anyway. Pull `main` before branching. Every change lands through a PR.
 - Stacked branches are fine, and the right way to break large work into smaller reviewable
   pieces. Check `gh pr list` before basing new work.
+- Documentation is part of the work, not a follow-up. Before calling a change done, check
+  `README.md`, `AGENTS.md`, `docs/`, and every skill the change touches, and land the updates as
+  their own commit in the same PR.
 - Conventional commits, with a body that says *why*. release-please reads the types
   (`release-please-config.json` maps them to changelog sections).
 - release-please owns `CHANGELOG.md` and the `version` in
