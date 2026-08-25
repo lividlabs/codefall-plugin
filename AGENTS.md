@@ -21,6 +21,9 @@ never restates the reasoning.
 - A skill reports and offers; it applies only what the user takes. Nothing lands unrequested.
 - Never present an option that would be refused — unsupported stacks and planned profiles are
   exits, not menu choices. See the stack question in `scaffold`'s SKILL.md.
+- Every verb reads `.codefall/skills/<verb>/CUSTOMIZE.md` from the user's project when it exists —
+  project procedure the plugin cannot know. Copy the paragraph from `specify`'s SKILL.md verbatim;
+  factor it into `shared/` once three verbs carry it.
 - Renaming, moving, or retiring a template ships a row in
   `plugins/codefall/skills/graft/lineage.md`, in the same PR. `graft` can only tell a rename from
   a deletion plus an addition because that record exists.
