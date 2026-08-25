@@ -11,7 +11,7 @@ never restates the reasoning.
   its Status line to `Superseded by <id> — <date>`.
 - Successor naming: the current template's name when a rename is involved, an edition suffix
   (`ADR-BASE-02.2`) when it isn't. Mechanics: `plugins/codefall/skills/graft/SKILL.md`, step 5.
-- This binds every verb that touches ADRs — `graft` today, `architect` and the rest as they land.
+- This binds every verb that touches ADRs — `graft` today, `design` and the rest as they land.
 
 ## Skills
 

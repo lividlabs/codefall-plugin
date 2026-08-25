@@ -74,12 +74,12 @@ language or scaffold only the half that fits. A profile counts as supported once
 ## Roadmap
 
 The verbs chain: `scaffold` makes the project, `specify` states the problem,
-`architect` decides the shape, `implement` writes it, `review` checks it.
+`design` decides the shape, `implement` writes it, `review` checks it.
 
 | Verb | Does |
 | --- | --- |
 | `specify` | Write a GitHub issue for a bug or feature. |
-| `architect` | Write ADRs and tech specs, as GitHub issues or equivalent. |
+| `design` | Turn a specification into a technical design and a work breakdown; the tickets land in Beads, with their dependencies, as a graph. |
 | `implement` | Write code for a tech spec. |
 | `review` | Review specs or code. Eventually multi-harness. |
 | `migrate` | Restructure code to a changed stance — architecture moves, component extraction. The code-refactor counterpart to `graft`, which moves only documents. |
