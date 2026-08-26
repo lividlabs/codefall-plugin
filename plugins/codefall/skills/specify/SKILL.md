@@ -74,9 +74,9 @@ Reach for a human consumer first, because a human benefit is harder to fake. But
 one. `As an engineer` is usually a punt — legitimate when building developer tooling, evasive
 otherwise.
 
-**When no honest persona exists, say so in the story rather than inventing one:**
+**When no real persona exists, say so in the story rather than inventing one:**
 
-> A clean persona was hard to identify here; the closest honest consumer is the on-call engineer,
+> A clean persona was hard to identify here; the closest real consumer is the on-call engineer,
 > because they are the only party who observes the outcome.
 
 That sentence is more useful to the implementer than a plausible fiction.

@@ -72,7 +72,7 @@ do:
 
 **Only untouched is ever safe to take mechanically.** Taking a revision never rewrites the
 ratified file — it lands as a new, superseding ADR (step 5) — but building that successor from the
-current template is only honest when the template fully accounts for what the project has. For an
+current template is only correct when the template fully accounts for what the project has. For an
 amended or edited ADR it does not: the project changed the decision on purpose, and a
 template-built successor would silently drop that change from what governs. So for those two the
 diff *is* the deliverable — authoring the superseding ADR that carries their amendment forward is
@@ -241,7 +241,7 @@ the record here — the documents are.
   `"lastGraft": { "pluginVersion": "<version>", "date": "<date>" }` at the top level, reading the
   version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — do not guess it. Where the file
   didn't exist, write it fresh: this plugin version, today's date, the profiles and decisions as
-  established, and per ADR an honest `amended` — `false` only for files that now hash-match a
+  established, and per ADR an accurate `amended` — `false` only for files that now hash-match a
   current template, `true` for anything kept that differs.
 - **`docs/decision-log.md`** — one line under `Locked`: *grafted codefall `<version>` on `<date>` —
   took ADR-BASE-03, ADR-TS-01; left ADR-TS-02 (amended)*. Humans read this; `scaffold.json` stays
@@ -273,7 +273,7 @@ the graft should be reviewable as one coherent change.
 Repo-wide rules — verb naming, template lineage upkeep, ADR immutability — live in the plugin
 repo's root `AGENTS.md`. Specific to this skill:
 
-- `lineage.md` is load-bearing: any change that renames, moves, or retires a template ships a row
+- `lineage.md` is required: any change that renames, moves, or retires a template ships a row
   in it, in the same PR. Graft can only tell a rename from a deletion because that record exists.
 - Graft writes nothing outside the target project. The plugin's own files — templates, lineage,
   this skill — are maintained through PRs, not by a run of graft.
