@@ -255,9 +255,9 @@ are not available, so offering them and then refusing spends the user's choice o
 annotated "this is unsupported, I would have to stop" is not a choice — it is a trap with extra
 steps. This holds for every question in this skill, not just this one.
 
-**"None of these" is the deliberate exit**, and the one option that leads to a stop. That is fine
-because it is honest about being an exit — the user picks it knowing what it means, rather than
-discovering it after choosing something that looked available.
+**"None of these" is the deliberate exit**, and the one option that leads to a stop. That is fine:
+the user picks it knowing what it means, rather than discovering it after choosing something that
+looked available.
 
 When the user picks it, say plainly:
 
@@ -424,7 +424,7 @@ nominated is noise.
   `docs-only`, `project-files`, or `runnable-skeleton`; `topology` has one entry per React surface
   and is omitted where a profile has no topologies.
 
-  **`amended` is the field that earns this file.** Only this step can record it honestly, because you
+  **`amended` is the field that earns this file.** Only this step can record it accurately, because you
   are the one doing the amending — reconstructing it later would mean diffing against the exact
   template version that emitted the file, which means keeping every historical version reachable.
   `sha256` covers the other case: an ADR hand-edited months after scaffolding. Together they separate

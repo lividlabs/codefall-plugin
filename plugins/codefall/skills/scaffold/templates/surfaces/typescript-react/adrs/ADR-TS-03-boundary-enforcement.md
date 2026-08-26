@@ -27,8 +27,8 @@ workflow, where fast code generation drifts without hard guardrails.
 - **`dependency-cruiser`** optional, as a CI graph-level gate if ESLint rules aren't enough.
 - On the **Next.js topology**, `server-only` is an optional extra: importing a module marked with it
   from a client component becomes a build error. Useful as a safety net on backend modules, but not
-  load-bearing here — the real server/client boundary is the HTTP call to a route handler, not the
-  module graph.
+  what enforces the boundary here — the real server/client boundary is the HTTP call to a route
+  handler, not the module graph.
 
 ### When
 

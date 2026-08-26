@@ -71,7 +71,7 @@ public list is dynamic, user-generated, and squarely in the first case.
 - Server-state concerns (caching, refetch, retry, loading/error) are the library's, not bespoke
   code.
 - Four tools to learn, but each does one job; the decision rule removes "where does this go?".
-- The no-mirroring rules are load-bearing and enforced in review.
+- The no-mirroring rules are essential and enforced in review.
 - **Redux is deliberately not chosen** — heavier than this split needs, and it still requires a
   query layer for server state.
 - On Next.js, the per-request rules are a correctness constraint rather than a preference, and their
