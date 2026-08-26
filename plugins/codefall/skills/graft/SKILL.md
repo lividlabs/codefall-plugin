@@ -241,7 +241,7 @@ the record here — the documents are.
   `"lastGraft": { "pluginVersion": "<version>", "date": "<date>" }` at the top level, reading the
   version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — do not guess it. Where the file
   didn't exist, write it fresh: this plugin version, today's date, the profiles and decisions as
-  established, and per ADR an accurate `amended` — `false` only for files that now hash-match a
+  established, and an `amended` per ADR — `false` only for files that now hash-match a
   current template, `true` for anything kept that differs.
 - **`docs/decision-log.md`** — one line under `Locked`: *grafted codefall `<version>` on `<date>` —
   took ADR-BASE-03, ADR-TS-01; left ADR-TS-02 (amended)*. Humans read this; `scaffold.json` stays

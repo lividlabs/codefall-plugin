@@ -8,7 +8,7 @@ Accepted — <date>
 
 Go has no way to say "this value may be absent" without either overloading the zero value or reaching
 for a pointer. `""` might be an empty middle name or no middle name; `0` might be a real quantity or
-an unset one. The usual workaround, `*string`, encodes absence explicitly but pays for it with nil
+an unset one. The usual workaround, `*string`, encodes absence but pays for it with nil
 dereferences and a heap allocation per optional field.
 
 `samber/mo` supplies the functional container types — `Option`, `Result`, `Either`, and friends. They

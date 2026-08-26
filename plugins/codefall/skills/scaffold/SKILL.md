@@ -255,9 +255,9 @@ are not available, so offering them and then refusing spends the user's choice o
 annotated "this is unsupported, I would have to stop" is not a choice — it is a trap with extra
 steps. This holds for every question in this skill, not just this one.
 
-**"None of these" is the deliberate exit**, and the one option that leads to a stop. That is fine
-because it is explicit about being an exit — the user picks it knowing what it means, rather than
-discovering it after choosing something that looked available.
+**"None of these" is the deliberate exit**, and the one option that leads to a stop. That is fine:
+the user picks it knowing what it means, rather than discovering it after choosing something that
+looked available.
 
 When the user picks it, say plainly:
 

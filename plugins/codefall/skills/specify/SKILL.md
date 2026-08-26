@@ -76,7 +76,7 @@ otherwise.
 
 **When no real persona exists, say so in the story rather than inventing one:**
 
-> A clean persona was hard to identify here; the closest real consumer is the on-call engineer,
+> A clean persona was hard to identify here; the closest consumer is the on-call engineer,
 > because they are the only party who observes the outcome.
 
 That sentence is more useful to the implementer than a plausible fiction.
