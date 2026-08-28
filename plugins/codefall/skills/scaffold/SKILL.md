@@ -52,10 +52,15 @@ the architecture. The ADRs ship Accepted because installing them is the entire p
 so a user who wants different layering, package-by-layer, or no boundary enforcement is asking for
 something `scaffold` does not do. Say so plainly rather than compromising the stance to fit.
 
-**Keep the session short.** Prefer defaults over questions, accept vague answers, and stop asking the
-moment you have enough to emit the docs. A scaffold that takes four exchanges is working correctly.
-If you find yourself on a long thread about how the thing will work, you are in `specify` and
-`design` territory — say so, and finish scaffolding.
+**Keep the session short.** Stop asking the moment you have enough to emit the docs, and prefer a
+default over a question wherever the answer doesn't change what gets emitted. A scaffold that takes
+four exchanges is working correctly. If you find yourself on a long thread about how the thing will
+work, you are in `specify` and `design` territory — say so, and finish scaffolding.
+
+**The concept this skill requires is what makes that possible.** Guessing a default in the absence of
+information is not the same as not needing the information — it is this skill's worst failure mode, and
+it is why step 1 will not run without a concept. Most of the questions are answered before the session
+starts, so there are fewer of them and the answers are better.
 
 Template paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}/skills/scaffold/templates/`.
 Resolve them against that root — they are not relative to the user's project.
@@ -145,6 +150,34 @@ Native ships `android/` and `ios/` empty.
 
 ### 1. Describe and match — the gate
 
+#### A concept comes first
+
+Read `docs/concepts/` in the working directory before asking anything.
+
+**When there is a concept**, read it and take two things from it: the **surfaces**, and the **shape**
+judgement below. Confirm both rather than asking for them — "CONCEPT-001 describes a React web app and
+a Go API, and reads as several separable capabilities; correct?" — and skip the question below entirely
+when it does. A concept's **Environment & constraints** section is written for this moment; read it.
+
+Read the concept for those two things and nothing else. Everything the scope table above puts out of
+bounds is still out of bounds when a document hands it to you: do not propose entities, sketch a
+schema, or reason about how a feature will behave because a concept described one. Product detail
+read here goes in the decision log's **Parking lot**, exactly as it would if the user had said it out
+loud.
+
+**When there is no concept**, say so, say why it matters, and offer the concept step:
+
+> Before scaffolding I'd like a concept — a short document saying what this is and why. It takes a few
+> minutes, and without one I end up picking architecture defaults from a one-sentence description,
+> which is where scaffolds go wrong. Want to run `/conceptualize` first?
+
+On yes, **stop scaffolding** and hand off. The user comes back to `/scaffold` afterwards.
+
+On no, continue — this is a requirement the user can break, not a refusal. Record the override in
+`docs/decision-log.md` under `Open` when you write it in step 4, per that step's instructions.
+
+#### Describe
+
 Ask **one question**: what are you building, and what does it run on? A sentence or two.
 
 That answer has to yield exactly **two** things, and nothing else learned here changes what gets
@@ -171,7 +204,8 @@ and it is the only follow-up this step is allowed.
 
 If that follow-up still doesn't settle it, **record the shape as unclear and move on.** Do not ask
 again and do not guess — step 3 handles an unclear shape as a provisional choice rather than a
-decided one.
+decided one. A concept read at the top of this step usually settles it before the question is asked;
+reaching this paragraph with one in hand should be rare.
 
 **Most projects are not defined yet, and that is the normal case.** The user is starting something.
 They do not owe you a product description, and a scaffold does not need one. Do not ask what the
@@ -387,6 +421,10 @@ questions, and only then check the chosen target: never scaffold into a non-empt
 saying so first, and never overwrite an existing path. A warning about a directory the user never
 nominated is noise.
 
+**A directory holding only `docs/concepts/` is the expected state, not a non-empty directory.** The
+concept this step requires was written there, so warning about it would fire on every correct run.
+Anything else in the directory still gets the warning.
+
 ### 4. Emit the docs — always
 
 - `docs/adrs/` — `ADR-BASE-01` through `ADR-BASE-03` plus every ADR the matched profiles supply, plus
@@ -440,7 +478,10 @@ nominated is noise.
   stays authoritative; this line is for humans.
   Seed `Open` with anything the interview surfaced but didn't settle — including a
   provisionally chosen ports-and-adapters, which belongs here rather than amended into ADR-BASE-02 as
-  though it were settled. Seed `Parking lot` with the product detail step 1 heard but deliberately did
+  though it were settled, and including a scaffold the user chose to run without a concept: "scaffolded
+  without a concept on `<date>`; shape judged from a one-sentence description." That belongs in the
+  docs and nowhere else — it is a decision made without enough information, which is what this section
+  is for, and not a setting. Seed `Parking lot` with the product detail step 1 heard but deliberately did
   not act on. Parking it is how that input reaches `specify` and `design` instead of being lost.
 - A scoped `AGENTS.md` per app/package, from the skeleton: fill the name, the one-line description,
   fix the ADR links to the right relative path, delete the `<frontend only>` blocks on backend
