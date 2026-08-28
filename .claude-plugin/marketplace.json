@@ -13,7 +13,7 @@
         "url": "https://github.com/lividlabs/codefall-plugin.git",
         "path": "plugins/codefall",
         "ref": "main",
-        "sha": "b14b2dff5b69ca19f2fe08e90eb09f11a3376acb"
+        "sha": "46e1c5bfc6c5194452a2c69653bbf2ca5524fe2e"
       },
       "description": "Codefall — Opinionated skills for the software development lifecycle."
     },
