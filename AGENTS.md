@@ -24,6 +24,13 @@ never restates the reasoning.
 - Every verb reads `.codefall/skills/<verb>/CUSTOMIZE.md` from the user's project when it exists —
   project procedure the plugin cannot know. Copy the paragraph from `specify`'s SKILL.md verbatim;
   factor it into `shared/` once three verbs carry it.
+- **Whose document is it** decides who repairs it. A file the plugin ships that nobody amends — the
+  operative rules a verb installs alongside a directory it owns, like `docs/concepts/AGENTS.md` — is
+  repaired by the verb that owns it, on run. A template that becomes the project's own document, one
+  that gets stamped, amended, and cited, belongs to `graft`, and ships a row in its scope table and in
+  `lineage.md`. Do not route a fixture through `graft`: it buys consent machinery for a decision with
+  no stakes, and costs a registration step whose failure is silent. Either way, **never overwrite a
+  file that has drifted** — show the difference and ask.
 - Renaming, moving, or retiring a template ships a row in
   `plugins/codefall/skills/graft/lineage.md`, in the same PR. `graft` can only tell a rename from
   a deletion plus an addition because that record exists.
