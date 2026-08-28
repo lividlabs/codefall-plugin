@@ -12,7 +12,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | [`conceptualize`](plugins/codefall/skills/conceptualize/SKILL.md) | Get an idea onto paper before anyone specifies or scaffolds it: a numbered concept document under `docs/concepts/` that carries the problem, the rough shape of an answer, and what nobody has decided yet. | in progress |
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
-| [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: user stories with numbered, testable acceptance criteria, written into the issue tracker. | in progress |
+| [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: a spec document under `docs/specs/` holding requirements with EARS acceptance criteria, mirrored to the issue tracker. | in progress |
 
 ### Concepts
 
@@ -35,6 +35,49 @@ A concept is `Draft` while you are still adding to it, `Ready` once it is writte
 `Active` once work starts against it. Replacing part of one adds a `Revised by` line; replacing it
 whole archives it to `docs/concepts/archive/`, where the identifier stays valid and the citations still
 resolve.
+
+### Specifications
+
+`specify` writes the *what* as `docs/specs/SPEC-003-slug.md`. A spec holds one cohesive feature, cut
+into **requirements** — each with a user story and its own acceptance criteria — because a requirement
+is the unit somebody picks up and builds.
+
+Acceptance criteria are written in [EARS](https://alistairmavin.com/ears/), the Easy Approach to
+Requirements Syntax, published at Rolls-Royce in 2009 and used here unchanged. It constrains a
+requirement to six sentence shapes with the clauses always in the same order:
+
+```
+The system SHALL order exported segments by departure time
+WHEN a traveler selects export, the system SHALL produce a file containing the itinerary
+IF the trip is missing a departure date, THEN the system SHALL name the missing field
+WHILE an export is in progress, the system SHALL show progress and allow cancellation
+```
+
+The point of the notation is that a criterion reads as an obligation rather than an observation, so
+the criteria *are* the requirements and there is no second list to keep in step with them. Failure
+behavior gets its own keyword, which is what makes the error paths visible as a group instead of
+scattered among the happy ones.
+
+Identifiers nest and share a prefix, so `grep SPEC-003` finds the document, its requirements, and
+every test and ticket that cites them:
+
+```
+SPEC-003                        the spec
+SPEC-003-REQ-01                 a requirement
+SPEC-003-REQ-01-AC-01           a criterion
+```
+
+Numbering is append-only at every level. A retired number is never reused, so a test citing
+`SPEC-003-REQ-01-AC-04` never silently comes to mean something else.
+
+**The document is canonical, and the tracker is a mirror of it.** GitHub gets a parent issue for the
+spec and a child issue per requirement, carrying that requirement's story and criteria in full so
+nobody has to click through to work the ticket. Re-running `specify` regenerates those bodies. The
+spec's own `Status` is `Draft`, `Ready`, or `Archived` and describes the document only — whether the
+work is queued, underway, or done is the tracker's to say.
+
+A feature too large for one cohesive spec becomes sibling specs rather than a parent and children.
+The concept above them is what groups them, which is why a concept's `Related` line holds a list.
 
 Skills are **explicitly invoked** — `/scaffold`, `/specify`, and so on. Each carries
 `disable-model-invocation: true`, so none of them fire on their own; scaffolding a project or filing
@@ -144,10 +187,10 @@ plugins/
               adrs/                 # ADR-GO-01..03
               AGENTS.md.skeleton
       specify/
-        SKILL.md
+        SKILL.md                    # the spec template, EARS criteria, the status lifecycle
         trackers/
           github/
-            PROFILE.md            # capabilities, field mapping, two-pass issue creation
+            PROFILE.md            # capabilities, field mapping, issue generation and refresh
 ```
 
 Within the plugin, `skills/`, `commands/`, `agents/`, and `hooks/hooks.json` are auto-discovered by

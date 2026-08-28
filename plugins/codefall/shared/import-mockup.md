@@ -64,14 +64,16 @@ them is no longer in the conversation.
 Return the directory path — `docs/mockups/<slug>/` — to whatever is calling this procedure. The
 caller decides what to do with it.
 
-When the issue carried `requires-mockup`, a successful import clears it:
+When issues carried `requires-mockup`, a successful import clears it:
 
 ```bash
 gh issue edit <number> --remove-label "requires-mockup"
 ```
 
-Clear it only when files actually landed. A recorded URL with no export is a judgement call — ask the
-user whether the link is enough to design against, and leave the label on if they are unsure.
+`specify` applies that label per requirement, so a feature can have several issues carrying it. Clear
+it on the ones this mockup covers and leave the rest, and clear it only when files actually landed. A
+recorded URL with no export is a judgement call — ask the user whether the link is enough to design
+against, and leave the label on if they are unsure.
 
 ## Committing
 
