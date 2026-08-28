@@ -164,13 +164,34 @@ would suspend one is asking for a different skill — say so and stop.
 
 ## Process
 
-### 1. Ask what they want to build
+### 1. Check preconditions
+
+Run the shared check against the user's project. It reports what is set up and repairs nothing.
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/shared/preflight.sh" .
+```
+
+`beads=ok` advances to step 2. Otherwise read `beads_reason`, tell the user what is missing, hand
+over the command that fixes it, and **stop**:
+
+| `beads_reason` | What is wrong | Give them |
+| --- | --- | --- |
+| `not_installed` | `bd` is not on PATH | `brew install beads` |
+| `not_initialized` | this repository has no beads database | `bd init` |
+| `unreadable` | bd found a database and could not read it | quote `beads_detail` — bd's own words are more use than a paraphrase |
+
+**Never run the remedy.** `bd init` writes `.beads/`, git hooks, `.claude/settings.json`, and a
+block in `AGENTS.md` and `CLAUDE.md`, then commits all of it. That is the user's decision, not a
+repair a skill makes on its way to somewhere else.
+
+### 2. Ask what they want to build
 
 One open question:
 
 > "What would you like to build? A sentence or two is enough to start."
 
-### 2. Check whether it already exists
+### 3. Check whether it already exists
 
 Two searches, both cheap, both worth doing before spending the user's time on an interview.
 
@@ -179,7 +200,7 @@ segments, domain nouns.
 
 **The tracker** — the profile supplies the search command.
 
-### 3. Report what you found
+### 4. Report what you found
 
 - **It exists in code.** Describe what is there, with file paths. Ask whether that is what they meant,
   and if not, what the distinction is.
@@ -188,7 +209,7 @@ segments, domain nouns.
 
 If the user confirms existing work covers their need, **stop the skill**. Nothing to specify.
 
-### 4. Interview
+### 5. Interview
 
 This is the step that decides whether the specification is worth anything.
 
@@ -238,7 +259,7 @@ on. You are raising a concern, not overriding a decision, and the user knows the
 yes, research it and summarize only the patterns that matter — never dump page content. Confirm the
 distillation with the user before it reaches the issue. On no, move on without searching.
 
-### 5. Audit what already exists
+### 6. Audit what already exists
 
 A specification describes what the user wants **added**. If the surface already has functionality the
 specification does not mention, an implementer may take the specification literally and remove it.
@@ -269,7 +290,7 @@ For each surface the feature touches — a screen, a route, a component, an enti
 
 Audit the surface the feature touches, not the whole application.
 
-### 6. Decide whether to decompose
+### 7. Decide whether to decompose
 
 **Specify decomposes by what a user can observe. `design` decomposes by what can be built.** These
 are different cuts, and conflating them puts build sequencing into a document that has no business
@@ -301,7 +322,7 @@ on that child.
 
 **The parent closes when its children close.** They are one piece of work.
 
-### 7. Mockups
+### 8. Mockups
 
 When the feature has a visual surface, ask whether a mockup exists.
 
@@ -314,7 +335,7 @@ that label, which is what keeps the gap from being forgotten.
 
 **Do not draw a mockup inside this skill.** Producing one is separate work with its own concerns.
 
-### 8. Recap before writing
+### 9. Recap before writing
 
 The recap is the user's last chance to catch a misread, so it has to be substantive.
 
@@ -337,7 +358,7 @@ was not interviewed — go back and ask. The recap checks your work as much as t
 Advance when every line is substantive, the user has confirmed it, and you could write the criteria
 without guessing at any of them.
 
-### 9. Write, then confirm
+### 10. Write, then confirm
 
 Compose the full issue body and **show it to the user before anything is created**. Nothing reaches
 the tracker unapproved.
@@ -358,7 +379,7 @@ need it, how it fits what already exists. No technology.]
 
 ## Existing behavior preserved
 
-[Only when step 5 found something. Otherwise omit the section entirely.]
+[Only when step 6 found something. Otherwise omit the section entirely.]
 
 - <element> — <what it does today>
 
@@ -379,12 +400,12 @@ need it, how it fits what already exists. No technology.]
 
 **Omit empty sections.** A body full of headings with nothing under them trains readers to skim.
 
-### 10. Create
+### 11. Create
 
 Follow the creation sequence in the tracker profile. It runs in two passes because the criteria need
 the issue number, and it is the profile's job to know how that works for its tracker.
 
-### 11. Wrap up
+### 12. Wrap up
 
 Report what was created, with links. Ask whether anything needs adjusting.
 
