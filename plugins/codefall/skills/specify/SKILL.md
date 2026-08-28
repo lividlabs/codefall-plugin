@@ -191,6 +191,20 @@ One open question:
 
 > "What would you like to build? A sentence or two is enough to start."
 
+**Then look for a concept.** If `docs/concepts/` exists, read the live concepts there — not
+`archive/` — and offer the relevant one as context:
+
+> CONCEPT-002 covers the auditing rework and looks like the frame for this. Want me to work from it?
+
+A concept is **never required**. It carries the *why* this skill does not interview for, so taking one
+usually shortens the interview and improves the Context section. What it does not carry is acceptance
+criteria: a concept's **Proposed shape** is a rough direction, not a specification, and step 5 still
+interviews for everything below. Do not lift criteria out of a concept and do not treat its **Open
+questions** as settled.
+
+Do not change the concept's `Status`. Work starting is `implement`'s transition to record, not this
+skill's.
+
 ### 3. Check whether it already exists
 
 Two searches, both cheap, both worth doing before spending the user's time on an interview.
@@ -371,7 +385,8 @@ As a <consumer>, I want <capability>, so that <benefit>.
 ## Context
 
 [Two or three paragraphs in plain language: why this matters, what the user is doing when they
-need it, how it fits what already exists. No technology.]
+need it, how it fits what already exists. No technology. Link the concept here when one framed
+this work — `docs/concepts/CONCEPT-002-audit-rework.md` — rather than restating it.]
 
 ## Acceptance Criteria
 
@@ -408,6 +423,9 @@ the issue number, and it is the profile's job to know how that works for its tra
 ### 12. Wrap up
 
 Report what was created, with links. Ask whether anything needs adjusting.
+
+If a concept framed this work, fill in its `Related` line with the issue link — that line is written
+expecting a specification to complete it. Add the link and change nothing else in the file.
 
 ## Tracker profiles
 
