@@ -96,7 +96,7 @@ everything is not the goal and pretending to have resolved something is a defect
 # CONCEPT-NNN: {Title}
 
 **Status:** Ready — {date}
-**Related:** spec: _(link once `/specify` creates it)_ · plan: _(link once `/design` creates it)_
+**Related:** specs: _(identifiers once `/specify` creates them)_ · plan: _(link once `/design` creates it)_
 
 <!--
 Problem and Proposed shape are the minimum — every concept needs
@@ -162,6 +162,12 @@ nothing else. An optional section with nothing to say is deleted, heading includ
 
 **The `Related` line also carries backward links** when they exist: the saved source document under
 `docs/concepts/sources/`, and any concept this one revises or replaces.
+
+**The `specs` field holds a list**, because one concept can produce several specifications —
+`SPEC-003, SPEC-004, SPEC-005`. A concept large enough to need more than one spec is normal, and the
+concept is what groups them: `specify` writes siblings rather than a parent spec, precisely because
+this line already does that job. `specify` appends each identifier as it creates one, and changes
+nothing else in the file.
 
 ## Status and lifecycle
 
