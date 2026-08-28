@@ -6,6 +6,21 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.6.0](https://github.com/lividlabs/codefall-plugin/compare/v0.5.0...v0.6.0) (2026-08-28)
+
+
+### Features
+
+* add the conceptualize skill, and require a concept before scaffolding ([#42](https://github.com/lividlabs/codefall-plugin/issues/42)) ([4eec411](https://github.com/lividlabs/codefall-plugin/commit/4eec411e6193cca3b7bbf7752717db6dc15ba478))
+* check beads setup before a skill starts work ([#41](https://github.com/lividlabs/codefall-plugin/issues/41)) ([002529b](https://github.com/lividlabs/codefall-plugin/commit/002529b1569ee9fc85dc01f47e2aec56b536a228))
+* **specify:** read project customizations from CUSTOMIZE.md ([#38](https://github.com/lividlabs/codefall-plugin/issues/38)) ([1c0d9d1](https://github.com/lividlabs/codefall-plugin/commit/1c0d9d165ea28b55d4124333b24a3d4c3a3748db))
+* **specify:** write specs to the repo with EARS acceptance criteria ([#43](https://github.com/lividlabs/codefall-plugin/issues/43)) ([680b952](https://github.com/lividlabs/codefall-plugin/commit/680b95212bd7374cc9e91880589c4dab8b16060b))
+
+
+### Documentation
+
+* replace the banned jargon with plain words ([#40](https://github.com/lividlabs/codefall-plugin/issues/40)) ([213b2ed](https://github.com/lividlabs/codefall-plugin/commit/213b2ed6448b1b20803c0984fa3e97ececd9800c))
+
 ## [0.5.0](https://github.com/lividlabs/codefall-plugin/compare/v0.4.1...v0.5.0) (2026-08-25)
 
 
