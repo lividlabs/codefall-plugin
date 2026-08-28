@@ -9,9 +9,32 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 
 | Skill | Does | Status |
 | --- | --- | --- |
+| [`conceptualize`](plugins/codefall/skills/conceptualize/SKILL.md) | Get an idea onto paper before anyone specifies or scaffolds it: a numbered concept document under `docs/concepts/` that carries the problem, the rough shape of an answer, and what nobody has decided yet. | in progress |
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
 | [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: user stories with numbered, testable acceptance criteria, written into the issue tracker. | in progress |
+
+### Concepts
+
+`conceptualize` writes the *why* down first — the problem, who feels it, the rough shape of an answer,
+and the open questions — as `docs/concepts/CONCEPT-001-slug.md`. It is deliberately informal, and its
+length is proportional to what you put in: two paragraphs is a valid concept, and so is a page.
+Unknowns stay in the document as unknowns rather than being invented away.
+
+**`scaffold` requires a concept**, and offers to run this skill when there isn't one. That requirement
+exists because scaffolding without any idea of what is being built is where scaffolds go wrong — the
+architecture questions get answered by defaults picked from a one-sentence description. With a concept
+in hand most of those questions are already answered, so the scaffold session is shorter *and* the
+answers are better. You can decline, and the scaffold records that it ran without one.
+
+`specify` may draw on a concept and never requires one, because a concept carries the *why* and a
+specification carries the *what* — they are different documents, and plenty of features need only the
+second.
+
+A concept is `Draft` while you are still adding to it, `Ready` once it is written and agreed, and
+`Active` once work starts against it. Replacing part of one adds a `Revised by` line; replacing it
+whole archives it to `docs/concepts/archive/`, where the identifier stays valid and the citations still
+resolve.
 
 Skills are **explicitly invoked** — `/scaffold`, `/specify`, and so on. Each carries
 `disable-model-invocation: true`, so none of them fire on their own; scaffolding a project or filing
@@ -67,15 +90,16 @@ share one profile. What differs is toolchain — and the profile records the tra
 with Babel, not `tsc`, so ADR-TS-01's `emitDecoratorMetadata` is inert and Inversify fails at runtime
 unless `babel-plugin-transform-typescript-metadata` is added.
 
-`scaffold` asks you to describe the project, decomposes it into surfaces, and matches each against
-this table. **If any surface has no profile, it stops** — it won't improvise ADRs for an unsupported
+`scaffold` reads your concept, or asks you to describe the project when you declined one, decomposes
+it into surfaces, and matches each against this table. **If any surface has no profile, it stops** — it won't improvise ADRs for an unsupported
 language or scaffold only the half that fits. A profile counts as supported once
 `templates/surfaces/<name>/PROFILE.md` is complete.
 
 ## Roadmap
 
-The verbs chain: `scaffold` makes the project, `specify` states the problem, `mock-up` shows what
-it looks like, `design` decides the shape, `implement` writes it, `review` checks it.
+The verbs chain: `conceptualize` frames the idea, `scaffold` makes the project, `specify` states the
+problem, `mock-up` shows what it looks like, `design` decides the shape, `implement` writes it,
+`review` checks it.
 
 | Verb | Does |
 | --- | --- |
@@ -101,6 +125,8 @@ plugins/
     shared/
       import-mockup.md            # one import procedure, used by specify and mock-up
     skills/
+      conceptualize/
+        SKILL.md                    # the concept template and the status lifecycle
       graft/
         SKILL.md
         lineage.md                  # what every template used to be called; graft's rename record
