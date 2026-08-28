@@ -25,7 +25,7 @@ The process resembles the waterfall process of yore but the ability it iterate o
  - [ ] conceptualize skill: concept documents in `docs/concepts/`, required by scaffold, optional for specify
  - [ ] scaffold skill for Golang projects
  - [ ] specify skill: spec documents in `docs/specs/` with EARS acceptance criteria, mirrored to Github Issues
- - [ ] mock-up skill: import from a design tool, or author one when there isn't one
+ - [x] mock-up skill: import from a design tool, or author one when there isn't one
  - [ ] specify tracker profiles for Jira and Linear
  - [ ] tracker resolution for specify: read the destination from a project-level record instead of asking each run
  - [ ] design skill integrated with Beads, this requires a Beads configuration in the application

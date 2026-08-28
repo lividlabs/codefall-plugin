@@ -13,6 +13,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
 | [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: a spec document under `docs/specs/` holding requirements with EARS acceptance criteria, mirrored to the issue tracker. | in progress |
+| [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or draw low-fidelity wireframes as self-contained HTML when there is no design tool. | in progress |
 
 ### Concepts
 
@@ -83,6 +84,32 @@ Skills are **explicitly invoked** — `/scaffold`, `/specify`, and so on. Each c
 `disable-model-invocation: true`, so none of them fire on their own; scaffolding a project or filing
 an issue is a deliberate act, not something inferred from a passing remark.
 
+### Mockups
+
+`mock-up` puts the picture in the repository, at `docs/mockups/<slug>/`. It runs before or after
+`specify` — a mockup can be what makes the requirements obvious, or it can be drawn once they are
+settled.
+
+Two ways in. When you already work in a design tool, it **imports** what you exported and never
+touches the files again: an imported asset is the record of what someone decided, and redrawing it
+loses that. When there is no design tool, it **authors** the mockup as one self-contained HTML file
+per screen state — no build step, no dependencies, nothing fetched, so the file still opens years
+later.
+
+Authored mockups are deliberately low-fidelity: greyscale, a system font, structure and states rather
+than brand design. A drawing that looks finished gets treated as finished, and every visual decision
+in it was made by a model nobody asked to make visual decisions. The states are the point — populated,
+empty, and the primary failure at minimum, because the empty and error screens are where features come
+back from review.
+
+The slug names the **surface**, not the spec. One screen gets touched by several specs over its life
+and outlives all of them, so a mockup filed under whichever spec arrived first makes the second one
+either duplicate it or reach into another spec's directory. Specs reference mockups by path under
+their **Design notes**.
+
+When `specify` records a requirement whose surface has no picture yet, its tracker issue is labelled
+`requires-mockup` and `design` refuses to act on it. Landing the mockup clears the label.
+
 ### The stance
 
 **Pure Clean Architecture organized package-by-component**, with boundaries **mechanically
@@ -146,7 +173,6 @@ problem, `mock-up` shows what it looks like, `design` decides the shape, `implem
 
 | Verb | Does |
 | --- | --- |
-| `mock-up` | Import a mockup exported from a design tool, or author one when there isn't one. Runs before or after `specify`; an issue labelled `requires-mockup` is blocked until it does. |
 | `design` | Turn a specification into a technical design and a work breakdown; the tickets land in Beads, with their dependencies, as a graph. |
 | `implement` | Write code for a tech spec. |
 | `review` | Review specs or code. Eventually multi-harness. |
@@ -166,13 +192,17 @@ plugins/
     .claude-plugin/
       plugin.json     # plugin manifest
     shared/
+      customizations.md           # how every verb reads .codefall/skills/<verb>/CUSTOMIZE.md
       import-mockup.md            # one import procedure, used by specify and mock-up
+      preflight.sh                # the beads precondition check; reports, never repairs
     skills/
       conceptualize/
         SKILL.md                    # the concept template and the status lifecycle
       graft/
         SKILL.md
         lineage.md                  # what every template used to be called; graft's rename record
+      mock-up/
+        SKILL.md                    # the two modes, the HTML house rules, the states checklist
       scaffold/
         SKILL.md
         templates/
