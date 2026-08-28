@@ -196,12 +196,16 @@ does not change.
 Archiving moves the file to `docs/concepts/archive/` under the same name. The identifier stays valid
 and citations still resolve, to the new path.
 
-`conceptualize` maintains `docs/concepts/AGENTS.md`. It is written when the directory is created, added
-on a later run if it is missing, and brought current if its content has drifted from what this skill
-ships. That is the whole retrofit story — every repo gets the file the first time the skill runs, and a
-repo that has never run this skill has no `docs/concepts/` for it to scope. It says one thing, that
-`archive/` is history and is not read unless asked, which is the closest thing to an ignore file that
-actually works: Claude Code has no `.agentignore`.
+`conceptualize` maintains `docs/concepts/AGENTS.md`. It is written when the directory is created and
+added on a later run if it is missing. That is the whole retrofit story — every repo gets the file the
+first time the skill runs, and a repo that has never run this skill has no `docs/concepts/` for it to
+scope. It says one thing, that `archive/` is history and is not read unless asked, which is the closest
+thing to an ignore file that actually works: Claude Code has no `.agentignore`.
+
+**Never overwrite a file that has drifted.** When one exists and its content differs from what this
+skill ships, show the user the difference and ask. The difference is a hand edit until they say
+otherwise, and a repair that silently discards someone's rule is worse than a stale file. Replace it
+only on a yes; on a no, leave it and say nothing further about it.
 
 The file's content:
 
