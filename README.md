@@ -13,7 +13,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
 | [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: a spec document under `docs/specs/` holding requirements with EARS acceptance criteria, mirrored to the issue tracker. | in progress |
-| [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or draw low-fidelity wireframes as self-contained HTML when there is no design tool. | in progress |
+| [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or make the mockup here — static screens, or something that actually works when the interaction is the question. | in progress |
 
 ### Concepts
 
@@ -92,15 +92,24 @@ settled.
 
 Two ways in. When you already work in a design tool, it **imports** what you exported and never
 touches the files again: an imported asset is the record of what someone decided, and redrawing it
-loses that. When there is no design tool, it **authors** the mockup as one self-contained HTML file
-per screen state — no build step, no dependencies, nothing fetched, so the file still opens years
-later.
+loses that. When you don't, it **makes** one.
 
-Authored mockups are deliberately low-fidelity: greyscale, a system font, structure and states rather
-than brand design. A drawing that looks finished gets treated as finished, and every visual decision
-in it was made by a model nobody asked to make visual decisions. The states are the point — populated,
-empty, and the primary failure at minimum, because the empty and error screens are where features come
-back from review.
+Making one starts from defaults rather than rules — static HTML, self-contained, greyscale, one
+stated viewport — each with the reason attached and each one you can override. A grey wireframe is
+where to begin because a drawing that looks finished gets treated as finished, but when you want to
+see it finished, you get that. When the open question is how something *behaves* — a picker, a
+multi-step flow, a filter that has to feel right — it builds the thing working, with a pinned library
+if that is what makes it faithful. Working or not, it stays a reference: it proves the interaction and
+the implementer rebuilds it in the app's stack.
+
+The states are where the value is — populated, empty, and the primary failure at minimum, because the
+empty and error screens are the ones nobody describes in an interview and where features come back
+from review.
+
+Run it with nothing and it asks which spec this is for. No spec, and it looks for a concept — a wider
+frame that usually spans several surfaces, so it says how big the run would be before starting rather
+than refusing it. Neither is fine too; plenty of surfaces get drawn before anyone writes anything
+down.
 
 The slug names the **surface**, not the spec. One screen gets touched by several specs over its life
 and outlives all of them, so a mockup filed under whichever spec arrived first makes the second one
@@ -202,7 +211,7 @@ plugins/
         SKILL.md
         lineage.md                  # what every template used to be called; graft's rename record
       mock-up/
-        SKILL.md                    # the two modes, the HTML house rules, the states checklist
+        SKILL.md                    # the two modes, the defaults you can override, the states
       scaffold/
         SKILL.md
         templates/

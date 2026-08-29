@@ -61,6 +61,7 @@ Replace it only on a yes; on a no, leave it and say nothing further about it.
 
 - A mockup is a drawing of a surface. Never copy its markup, styles, or class names into the
   application — it is a picture of the outcome, not a draft of the implementation.
+- A working mockup is still a drawing. It proves an interaction and gets rebuilt properly.
 - Mockups are keyed by surface, never by spec or concept. One mockup serves several specs.
 - Imported assets are the record of what someone decided. Never edit one; add alongside it.
 - The `README.md` says what each file shows. Keep it current when files are added or replaced.
