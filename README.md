@@ -13,7 +13,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | [`scaffold`](plugins/codefall/skills/scaffold/SKILL.md) | Start a new project on the Clean + package-by-component stance: ratified ADRs, scoped `AGENTS.md`, optionally project files and boundary lint. | in progress |
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
 | [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: a spec document under `docs/specs/` holding requirements with EARS acceptance criteria, mirrored to the issue tracker. | in progress |
-| [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or make the mockup here — static screens, or something that actually works when the interaction is the question. | in progress |
+| [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or make the mockup here, matching the app's own design system so it looks like it belongs. | in progress |
 
 ### Concepts
 
@@ -94,22 +94,31 @@ Two ways in. When you already work in a design tool, it **imports** what you exp
 touches the files again: an imported asset is the record of what someone decided, and redrawing it
 loses that. When you don't, it **makes** one.
 
-Making one starts from defaults rather than rules — static HTML, self-contained, greyscale, one
-stated viewport — each with the reason attached and each one you can override. A grey wireframe is
-where to begin because a drawing that looks finished gets treated as finished, but when you want to
-see it finished, you get that. When the open question is how something *behaves* — a picker, a
-multi-step flow, a filter that has to feel right — it builds the thing working, with a pinned library
-if that is what makes it faithful. Working or not, it stays a reference: it proves the interaction and
-the implementer rebuilds it in the app's stack.
+**A mockup, not a wireframe.** Before drawing anything it reads the repository for your design
+system, your tokens, your existing screens, and the fonts actually in use, then inlines what it found
+so the file stays self-contained. The default is as close to what would ship as the repository lets it
+get — someone opening it should see your product with a new screen in it, not a grey diagram of one.
+A box drawing is still available when there is nothing to match yet or structure is the only open
+question; it just isn't the starting point.
+
+Everything else is a default with the reason attached and a stated case for going the other way:
+static HTML, one file per state, realistic content, one viewport. When the open question is how
+something *behaves* — a picker, a multi-step flow, a filter that has to feel right — it builds the
+thing working, with a pinned library if that is what makes it faithful. Working or not, it stays a
+reference: it proves the interaction and the implementer rebuilds it in the app's stack.
+
+**Where the answer is genuinely open, you get options.** Two or three versions of the screen, named
+by what differs — `list-table.html` and `list-cards.html` — with a line each on what they are better
+at and which one it would pick. The one you take keeps the plain name and the README records the
+decision.
 
 The states are where the value is — populated, empty, and the primary failure at minimum, because the
 empty and error screens are the ones nobody describes in an interview and where features come back
 from review.
 
-Run it with nothing and it asks which spec this is for. No spec, and it looks for a concept — a wider
-frame that usually spans several surfaces, so it says how big the run would be before starting rather
-than refusing it. Neither is fine too; plenty of surfaces get drawn before anyone writes anything
-down.
+It opens by asking whether this is for a spec, for a concept, or a fresh start, and lists what is
+there so you can pick one. A concept is a wider frame that usually spans several surfaces, so it says
+how big the run would be before starting rather than refusing it.
 
 The slug names the **surface**, not the spec. One screen gets touched by several specs over its life
 and outlives all of them, so a mockup filed under whichever spec arrived first makes the second one
@@ -211,7 +220,7 @@ plugins/
         SKILL.md
         lineage.md                  # what every template used to be called; graft's rename record
       mock-up/
-        SKILL.md                    # the two modes, the defaults you can override, the states
+        SKILL.md                    # the two modes, the design survey, defaults, options, states
       scaffold/
         SKILL.md
         templates/
