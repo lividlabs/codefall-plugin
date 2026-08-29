@@ -22,8 +22,8 @@ never restates the reasoning.
 - Never present an option that would be refused — unsupported stacks and planned profiles are
   exits, not menu choices. See the stack question in `scaffold`'s SKILL.md.
 - Every verb reads `.codefall/skills/<verb>/CUSTOMIZE.md` from the user's project when it exists —
-  project procedure the plugin cannot know. Copy the paragraph from `specify`'s SKILL.md verbatim;
-  factor it into `shared/` once three verbs carry it.
+  project procedure the plugin cannot know. The procedure lives in
+  `plugins/codefall/shared/customizations.md`; a skill points at it and never restates it.
 - **Whose document is it** decides who repairs it. A file the plugin ships that nobody amends — the
   operative rules a verb installs alongside a directory it owns, like `docs/concepts/AGENTS.md` — is
   repaired by the verb that owns it, on run. A template that becomes the project's own document, one

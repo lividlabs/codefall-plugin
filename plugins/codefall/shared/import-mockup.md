@@ -47,6 +47,26 @@ The one-line descriptions matter more than they look. An implementer opening a d
 `Frame 12.png` files cannot tell the empty state from the error state, and the person who could tell
 them is no longer in the conversation.
 
+### The directory's rules file
+
+`docs/mockups/AGENTS.md` is written when the directory is created, and added on a later run if it is
+missing. `mock-up` writes the same file, so a directory reached from either verb carries it.
+
+**Never overwrite a file that has drifted.** When one exists and its content differs from what is
+below, show the user the difference and ask. The difference is a hand edit until they say otherwise.
+Replace it only on a yes; on a no, leave it and say nothing further about it.
+
+```markdown
+# docs/mockups — operative rules
+
+- A mockup is a drawing of a surface. Never copy its markup, styles, or class names into the
+  application — it is a picture of the outcome, not a draft of the implementation.
+- A working mockup is still a drawing. It proves an interaction and gets rebuilt properly.
+- Mockups are keyed by surface, never by spec or concept. One mockup serves several specs.
+- Imported assets are the record of what someone decided. Never edit one; add alongside it.
+- The `README.md` says what each file shows. Keep it current when files are added or replaced.
+```
+
 ## Rules
 
 - **Never edit the assets.** An imported mockup is a record of what the user decided. Redrawing it is

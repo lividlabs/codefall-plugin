@@ -455,13 +455,7 @@ considered it and disagreed, the matter is closed and nothing goes in the docume
 
 ## Project customizations
 
-If `.codefall/skills/specify/CUSTOMIZE.md` exists in the user's project, read it before step 1, say
-you loaded it, and follow it for this run. It carries procedure this plugin cannot know — a system to
-consult, a question this project always asks, a section every spec carries, a step that runs after
-writing.
-
-It extends this skill and never relaxes it: **Rules** below holds regardless. A customization that
-would suspend one is asking for a different skill — say so and stop.
+Follow `shared/customizations.md` for this verb.
 
 ## Process
 
