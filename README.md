@@ -22,6 +22,18 @@ and the open questions — as `docs/concepts/CONCEPT-001-slug.md`. It is deliber
 length is proportional to what you put in: two paragraphs is a valid concept, and so is a page.
 Unknowns stay in the document as unknowns rather than being invented away.
 
+**It takes whatever you arrive with.** A sentence, ten minutes of thinking out loud, a vision
+document, a whiteboard photo, or a folder of design-tool exports. Mockups are routed to
+`docs/mockups/` where `design` and `implement` look for them; everything else is saved verbatim under
+`docs/concepts/sources/`, and the concept cites both. Arriving with finished screens is not a reason
+to be sent elsewhere — you can have every screen drawn and still have written nothing down about the
+problem they solve, which is the case this skill is most useful for.
+
+**A big pile usually holds more than one problem.** A vision document can cover three, and a mockup
+set spanning six surfaces usually does. Each problem that stands on its own becomes its own concept,
+written as siblings rather than a parent and children, connected by the source they all came from. The
+breakdown is proposed and you decide the cut.
+
 **`scaffold` requires a concept**, and offers to run this skill when there isn't one. That requirement
 exists because scaffolding without any idea of what is being built is where scaffolds go wrong — the
 architecture questions get answered by defaults picked from a one-sentence description. With a concept

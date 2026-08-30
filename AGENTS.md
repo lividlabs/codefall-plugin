@@ -19,6 +19,10 @@ never restates the reasoning.
   `plugins/codefall/skills/<verb>/SKILL.md`.
 - Every skill carries `disable-model-invocation: true`. Running one is a deliberate act.
 - A skill reports and offers; it applies only what the user takes. Nothing lands unrequested.
+- **Refuse only what you cannot do.** A missing surface profile, a missing tool, an unsupported
+  tracker — those are exits. Disagreeing about size, altitude, or fit is not: say what you think and
+  why, then do what the user asks. `conceptualize`'s floor and `specify`'s cohesion check are both
+  this shape.
 - Never present an option that would be refused — unsupported stacks and planned profiles are
   exits, not menu choices. See the stack question in `scaffold`'s SKILL.md.
 - Every verb reads `.codefall/skills/<verb>/CUSTOMIZE.md` from the user's project when it exists —
