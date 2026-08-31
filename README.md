@@ -14,6 +14,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | [`graft`](plugins/codefall/skills/graft/SKILL.md) | Bring a scaffolded project's docs up to date with the current templates: report what changed since its version, with per-file provenance, and apply only what the user takes. Also handles first-time adoption of the stance. | in progress |
 | [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: a spec document under `docs/specs/` holding requirements with EARS acceptance criteria, mirrored to the issue tracker. | in progress |
 | [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or make the mockup here, matching the app's own design system so it looks like it belongs. | in progress |
+| [`design`](plugins/codefall/skills/design/SKILL.md) | Decide how a feature gets built and put the work into the graph: a design document under `docs/designs/` scaled to the size of the change, ADRs for the choices that are hard to reverse, and the tasks in Beads with their dependency edges. | in progress |
 
 ### Concepts
 
@@ -140,6 +141,54 @@ their **Design notes**.
 When `specify` records a requirement whose surface has no picture yet, its tracker issue is labelled
 `requires-mockup` and `design` refuses to act on it. Landing the mockup clears the label.
 
+### Designs
+
+`design` decides the *how* and puts the work into the graph. Two outputs, and the second is the one
+that always exists: a design document at `docs/designs/DESIGN-007-slug.md`, and the tasks in Beads
+with their dependency edges.
+
+**Not every change earns a document.** A fix contained to one component, changing nothing public and
+coming to one or two tasks, gets beads and nothing else — a design document for a null check is the
+ceremony this avoids. Anything crossing a component boundary, or fanning out past roughly three
+dependent tasks, gets one. The document then has three required sections — Overview, Architecture,
+Task Plan — and seven more that appear only when their trigger fires. A conditional section with
+nothing behind it is deleted, heading and all.
+
+Research findings go inline, next to the decision they bear on. There is no sibling `research.md`,
+no `data-model.md`, and no `contracts/` directory: a finding filed away from its decision is a note
+nobody reads.
+
+**The task plan is staged before it is real.** It starts as a table with local identifiers, so the
+dependency edges can be reviewed while they are still cheap to change — a flat list of tasks does not
+catch the thing review is for, which is a wrong ordering or a missing prerequisite:
+
+```
+| ID | Task                              | Depends on | Design ref |
+|----|-----------------------------------|------------|------------|
+| T1 | Add `StageContext` type + serde   | —          | Components |
+| T2 | Wire context load into `/scaffold`| T1         | Architecture |
+```
+
+Once you approve it, those rows become beads and the table is replaced by the line that records what
+became what — `Epic: bd-a2g · T1→bd-unz · T2→bd-s58`. Beads is authoritative from that moment, and a
+duplicate task list left behind in a git-tracked file would drift from it. The mapping is what lets a
+later run update the graph instead of duplicating it.
+
+**Revising a design reconciles the graph rather than rebuilding it.** A bead nobody has touched is
+edited, whatever changed. A bead someone has claimed, commented on, or closed is replaced only when
+the work already done against the old wording would no longer count — a ticket should not change
+under the person holding it. A task that leaves the design is reported to you, never closed on its
+own, because someone may still be working it.
+
+Choices that are hard to reverse — a new dependency, a schema other components will build on, a
+rejected alternative that cost real analysis — become an ADR in the project's own `ADR-NNN` sequence.
+Most designs need none. A ratified ADR is never rewritten: a revision lands as a new, superseding
+one.
+
+The design's `Status` is `Draft`, `Ready`, or `Archived` and describes the document only. Whether the
+work is queued, underway, or done is Beads' to say, the same division `specify` makes with its
+tracker.
+
 ### The stance
 
 **Pure Clean Architecture organized package-by-component**, with boundaries **mechanically
@@ -203,7 +252,6 @@ problem, `mock-up` shows what it looks like, `design` decides the shape, `implem
 
 | Verb | Does |
 | --- | --- |
-| `design` | Turn a specification into a technical design and a work breakdown; the tickets land in Beads, with their dependencies, as a graph. |
 | `implement` | Write code for a tech spec. |
 | `review` | Review specs or code. Eventually multi-harness. |
 | `migrate` | Restructure code to a changed stance — architecture moves, component extraction. The code-refactor counterpart to `graft`, which moves only documents. |
@@ -228,6 +276,8 @@ plugins/
     skills/
       conceptualize/
         SKILL.md                    # the concept template and the status lifecycle
+      design/
+        SKILL.md                    # the tiers, the document, the staged task plan, the Beads graph
       graft/
         SKILL.md
         lineage.md                  # what every template used to be called; graft's rename record
