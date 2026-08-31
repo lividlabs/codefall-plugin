@@ -12,7 +12,7 @@ The process resembles the waterfall process of yore but the ability it iterate o
  - **scaffold** the architecture and this process
  - **specify** requirements for a feature and their acceptance criteria; the specification is a document in the repo at `docs/specs/SPEC-NNN-slug.md`, holding one or more requirements, each with a user story and criteria written in EARS notation. The document is canonical and is mirrored to an issue tracker — a parent issue for the spec, a child issue per requirement — so people can see what is ready, in progress, and done. The first version mirrors only to GitHub Issues; Jira and Linear are profiles that come later.
  - **mock-up** the visual surface of a feature; runs before or after specify. It imports mockups exported from a design tool, or helps create one when the user doesn't have or want a design tool. Mockups land in `docs/mockups/<slug>/` and the specification references them; an issue labelled `requires-mockup` blocks design until the mockup exists.
- - **design** a system to implement a feature, the output will a technical specification and a work breakdown; the tickets from this step will live inside of beads; this step also determines dependencies on the tickets it creates as well as any potential dependencies on existing ticket. It inserts the work into the graph.
+ - **design** a system to implement a feature; the output is a design document in the repo at `docs/designs/DESIGN-NNN-slug.md` and a work breakdown whose tickets live inside of beads. The document is scaled to the change — a contained fix skips it entirely and gets beads only. It determines dependencies on the tickets it creates as well as any potential dependencies on existing tickets, and inserts the work into the graph. Choices that are hard to reverse become ADRs in the project's own sequence.
  - **implement** a feature following the dependency graph and executing work in parallel waves where possible; unit, integration, and end-to-end tests are part of the defniition of done. It also owns the concept transition to `Active` — a concept is Active once work has started against it, and no earlier skill can observe that moment.
  - **review** code and tests with or without another model or harness
  - **test** the completed code with unit tests, integration tests, end-to-end tests, and agentic driven tests
@@ -22,13 +22,13 @@ The process resembles the waterfall process of yore but the ability it iterate o
  ## Roadmap
 
  - [x] scaffold skill for Typescript projects: Node.js, React, and/or Next.js
- - [ ] conceptualize skill: concept documents in `docs/concepts/`, required by scaffold, optional for specify
+ - [x] conceptualize skill: concept documents in `docs/concepts/`, required by scaffold, optional for specify
  - [ ] scaffold skill for Golang projects
- - [ ] specify skill: spec documents in `docs/specs/` with EARS acceptance criteria, mirrored to Github Issues
+ - [x] specify skill: spec documents in `docs/specs/` with EARS acceptance criteria, mirrored to Github Issues
  - [x] mock-up skill: import from a design tool, or author one when there isn't one
  - [ ] specify tracker profiles for Jira and Linear
  - [ ] tracker resolution for specify: read the destination from a project-level record instead of asking each run
- - [ ] design skill integrated with Beads, this requires a Beads configuration in the application
+ - [x] design skill integrated with Beads, this requires a Beads configuration in the application
  - [ ] implement skill integrated with Beads, including the concept transition to `Active`
  - [ ] test skill
  - [ ] scaffold skill for Flutter projects
