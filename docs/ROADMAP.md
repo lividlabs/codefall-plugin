@@ -13,9 +13,9 @@ The process resembles the waterfall process of yore but the ability it iterate o
  - **specify** requirements for a feature and their acceptance criteria; the specification is a document in the repo at `docs/specs/SPEC-NNN-slug.md`, holding one or more requirements, each with a user story and criteria written in EARS notation. The document is canonical and is mirrored to an issue tracker — a parent issue for the spec, a child issue per requirement — so people can see what is ready, in progress, and done. The first version mirrors only to GitHub Issues; Jira and Linear are profiles that come later.
  - **mock-up** the visual surface of a feature; runs before or after specify. It imports mockups exported from a design tool, or helps create one when the user doesn't have or want a design tool. Mockups land in `docs/mockups/<slug>/` and the specification references them; an issue labelled `requires-mockup` blocks design until the mockup exists.
  - **design** a system to implement a feature; the output is a design document in the repo at `docs/designs/DESIGN-NNN-slug.md` and a work breakdown whose tickets live inside of beads. The document is scaled to the change — a contained fix skips it entirely and gets beads only. It determines dependencies on the tickets it creates as well as any potential dependencies on existing tickets, and inserts the work into the graph. Choices that are hard to reverse become ADRs in the project's own sequence.
- - **implement** a feature following the dependency graph and executing work in parallel waves where possible; unit, integration, and end-to-end tests are part of the defniition of done. It also owns the concept transition to `Active` — a concept is Active once work has started against it, and no earlier skill can observe that moment.
+ - **implement** a feature following the dependency graph and executing work in parallel waves where possible; every test the current work needs — unit, integration, and end-to-end, planned by design or discovered mid-task — is part of the definition of done. It also owns the concept transition to `Active` — a concept is Active once work has started against it, and no earlier skill can observe that moment.
  - **review** code and tests with or without another model or harness
- - **test** the completed code with unit tests, integration tests, end-to-end tests, and agentic driven tests
+ - **test** the completed system after work lands: regression passes, retesting in a fresh context, coverage campaigns, and agentic driven tests. The boundary with `implement` is time and scope — implement's tests prove the change being built; `test` re-proves the system.
 
  <insert a diagram?>
 
@@ -29,6 +29,6 @@ The process resembles the waterfall process of yore but the ability it iterate o
  - [ ] specify tracker profiles for Jira and Linear
  - [ ] tracker resolution for specify: read the destination from a project-level record instead of asking each run
  - [x] design skill integrated with Beads, this requires a Beads configuration in the application
- - [ ] implement skill integrated with Beads, including the concept transition to `Active`
+ - [x] implement skill integrated with Beads, including the concept transition to `Active`
  - [ ] test skill
  - [ ] scaffold skill for Flutter projects

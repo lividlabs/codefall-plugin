@@ -19,6 +19,9 @@ never restates the reasoning.
   `plugins/codefall/skills/<verb>/SKILL.md`.
 - Every skill carries `disable-model-invocation: true`. Running one is a deliberate act.
 - A skill reports and offers; it applies only what the user takes. Nothing lands unrequested.
+  Recording an observable fact is the exception: a skill that owns a status transition sets it when
+  the fact occurs and reports that it did — `implement` flipping a concept to `Active` at first
+  claim is this shape. Judgment transitions — promote, archive, revise — stay offer-only.
 - **Refuse only what you cannot do.** A missing surface profile, a missing tool, an unsupported
   tracker — those are exits. Disagreeing about size, altitude, or fit is not: say what you think and
   why, then do what the user asks. `conceptualize`'s floor and `specify`'s cohesion check are both

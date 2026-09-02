@@ -15,6 +15,7 @@ A plugin for Claude Code (and, later, Codex and friends). Every skill is a **ver
 | [`specify`](plugins/codefall/skills/specify/SKILL.md) | Turn a feature idea into a specification another session can implement: a spec document under `docs/specs/` holding requirements with EARS acceptance criteria, mirrored to the issue tracker. | in progress |
 | [`mock-up`](plugins/codefall/skills/mock-up/SKILL.md) | Get the visual surface of a feature into the repository under `docs/mockups/`: import what a design tool exported, or make the mockup here, matching the app's own design system so it looks like it belongs. | in progress |
 | [`design`](plugins/codefall/skills/design/SKILL.md) | Decide how a feature gets built and put the work into the graph: a design document under `docs/designs/` scaled to the size of the change, ADRs for the choices that are hard to reverse, and the tasks in Beads with their dependency edges. | in progress |
+| [`implement`](plugins/codefall/skills/implement/SKILL.md) | Execute the graph: claim ready beads, build each in an isolated worker worktree with tests as part of done, verify against acceptance criteria, open PRs, and walk the waves until the frontier is empty. Never merges to `main`. | in progress |
 
 ### Concepts
 
@@ -189,6 +190,36 @@ The design's `Status` is `Draft`, `Ready`, or `Archived` and describes the docum
 work is queued, underway, or done is Beads' to say, the same division `specify` makes with its
 tracker.
 
+### Implementation
+
+`implement` executes what `design` put into the graph. Point it at a bead, an epic, or a design — or
+at nothing, and it shows the ready work and asks. An epic means walking the whole graph: each close
+unblocks the next tasks, waves of background workers build them in isolated worktrees, and the run
+continues until the frontier is empty.
+
+**One approval starts it.** The go gate shows the landing strategy with its reason, a branch diagram,
+the waves and the models proposed per task, what will be claimed in Beads, and — when a concept sits
+behind the work — that go flips it to `Active`. After go, only a failure stops the run, and a failed
+worker gets one automatic retry at higher effort before anything reaches you. That absence of
+mid-run gates is what makes an overnight run possible.
+
+**How work lands is read from the graph's shape.** Independent chains stack toward `main` in
+parallel when their predicted file scopes are disjoint; overlap or fan-in serializes them into one
+topological stack; an epic branch appears only when fan-in meets a real need for parallelism, or
+when increments must not land on `main`. There is no depth cap — a deep stack costs only a muddy
+three-dot diff until it drains bottom-up.
+
+**A bead closes at done — acceptance criteria verified, checks green, PR open — not at merge.** That
+is Beads' own semantics, and it is what lets a stacked dependent start the moment its parent's
+branch is pushed. The merge seam is carried by gates: every PR gates a "landed" bead inside the
+epic, so the epic cannot close until you have merged everything, and the next session's
+`bd gate check` turns your merges into bead state.
+
+**A human performs every merge to `main`.** The run ends at open PRs and a reported bottom-up merge
+order, and the plugin ships a hook that mechanically denies the alternative. Tests are part of done
+— the ones the design planned and the ones the work turned out to need — while regression and
+fresh-context retesting stay with the future `test` verb.
+
 ### The stance
 
 **Pure Clean Architecture organized package-by-component**, with boundaries **mechanically
@@ -252,8 +283,8 @@ problem, `mock-up` shows what it looks like, `design` decides the shape, `implem
 
 | Verb | Does |
 | --- | --- |
-| `implement` | Write code for a tech spec. |
 | `review` | Review specs or code. Eventually multi-harness. |
+| `test` | Re-prove the system after work lands: regression passes, fresh-context retesting, coverage campaigns, agentic runs. |
 | `migrate` | Restructure code to a changed stance — architecture moves, component extraction. The code-refactor counterpart to `graft`, which moves only documents. |
 
 ## Layout
@@ -269,6 +300,9 @@ plugins/
   codefall/           # the plugin; this subtree is what gets installed
     .claude-plugin/
       plugin.json     # plugin manifest
+    hooks/
+      hooks.json                  # PreToolUse wiring for the merge guard
+      block-merge-to-main.sh      # denies merges and pushes to the default branch
     shared/
       customizations.md           # how every verb reads .codefall/skills/<verb>/CUSTOMIZE.md
       import-mockup.md            # one import procedure, used by specify and mock-up
@@ -281,6 +315,9 @@ plugins/
       graft/
         SKILL.md
         lineage.md                  # what every template used to be called; graft's rename record
+      implement/
+        SKILL.md                    # scope, landing strategies, the go gate, workers, the bead loop
+        worker-prompt.md            # the strategy-blind prompt each background worker is rendered
       mock-up/
         SKILL.md                    # the two modes, the design survey, defaults, options, states
       scaffold/
