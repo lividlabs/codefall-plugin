@@ -268,6 +268,25 @@ does not define.
 Requirement issues are the ones worth boarding, because they are the unit of work. Ask before adding
 the spec issue as well; on most boards a parent row is noise.
 
+## Work-state transitions — `implement`'s
+
+The mirror's lifecycle and labels are this profile's; the **work-state ladder on the spec's parent
+issue** belongs to `implement`, which is the only verb that can observe the moments. It performs
+exactly these transitions and no others:
+
+| Moment | With a Project board | Without one |
+| --- | --- | --- |
+| First bead claimed | Status → **In Progress** | — |
+| Work built, PRs open | Status → **In Review** | — |
+| Every PR merged, epic closed | Status → **Done**, issue closed, requirement children closed with it | Issue closed, children with it |
+
+Requirement sub-issues **never move individually** — beads carry design refs, not requirement IDs,
+so per-requirement status would be a guess, and a mirror that guesses is worse than one that is
+coarse. The running trail is the `Relates to #<spec-issue>` line `implement` puts in every PR body.
+
+Board IDs follow the rule above: discovered at run time, or read from the project's
+`.codefall/skills/implement/CUSTOMIZE.md` when pinned there.
+
 ## Note on Beads
 
 `bd github sync` moves issue **content** — title, body, labels, state, assignee. It does not move the

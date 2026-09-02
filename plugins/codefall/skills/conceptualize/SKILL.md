@@ -220,9 +220,9 @@ with is finished, whatever they called it when they started. Set `Draft` only wh
 stopping and will come back — "let's leave it there for now", "I want to think about this more". They
 will rarely use the word.
 
-**`Active` is set by `implement`, which does not exist yet.** Nothing sets it today. Do not claim
-otherwise and do not set it yourself; a concept sitting at `Ready` while work happens is the current,
-known state of things.
+**`Active` is set by `implement`**, automatically, at the first claim of work that traces back to
+the concept — it records the observable fact that work has started. Do not set it yourself; a
+concept still at `Ready` means `implement` has not run against it.
 
 **A concept is never renumbered and its identifier is never reused.** A spec citing `CONCEPT-003`
 must always mean the same document, including after it is archived — the file moves, the identifier
