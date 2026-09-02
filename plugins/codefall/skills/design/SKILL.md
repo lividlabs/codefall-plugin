@@ -349,10 +349,16 @@ Beads holds the tasks and the graph. The design document holds the approach.
 | Bead | One per | Type | Body |
 | --- | --- | --- | --- |
 | Epic | design document | `epic` | The Overview, and the path to the document |
-| Task | Task Plan row | `task`, or `bug` where it is one | What to do, and the design ref |
+| Task | Task Plan row | `task`, or `bug` where it is one | What to do, the design ref, and acceptance criteria |
 
-Tier 0 has no epic. One or two beads are created directly, with the reproduction and the cause in
-the body, and there is no document for them to point at.
+**Every task bead carries acceptance criteria** — two to five checkable statements, drawn from the
+spec requirements the task serves and the Hard Constraints that bind it. A criterion that traces to
+a spec requirement cites it (`R3: context survives a restart`). They are the definition of done
+`implement` verifies before closing the bead, so write them as checks, not as restated task text.
+
+Tier 0 has no epic. One or two beads are created directly, with the reproduction, the cause, and
+acceptance criteria in the body — there is no document for them to point at, so the bead must be
+self-sufficient.
 
 Every bead gets `--spec-id` set to the design document's path. It is a backstop: the mapping line in
 the document is the primary record, and `spec_id` is what finds the beads again if that line is
@@ -403,10 +409,12 @@ reverse, and nothing but the ready set will tell you.
 
 **The plan file carries only these fields.** `key`, `title`, `type`, `description`, `labels`,
 `priority`, `parent_key` on a node; `from_key`, `to_key`, `type` on an edge. Anything else is
-**silently dropped** with a warning. `--spec-id` is not among them, so set it afterwards:
+**silently dropped** with a warning. Neither `--spec-id` nor `--acceptance` is among them, so both
+are set afterwards, in one update pass over the creation output:
 
 ```bash
-bd update <id> --spec-id docs/designs/DESIGN-007-stage-context.md
+bd update <id> --spec-id docs/designs/DESIGN-007-stage-context.md \
+  --acceptance $'R3: context survives a restart\nHard constraint: one open write txn per booking'
 ```
 
 ### Verify the graph
@@ -645,7 +653,7 @@ Do not commit.
 ### 9. Create the graph
 
 Build the plan file from the staging table, per [Beads](#beads). Dry-run it, create it, set
-`--spec-id` on every bead, then verify with `bd ready` and `bd dep cycles`.
+`--spec-id` and `--acceptance` on every task bead, then verify with `bd ready` and `bd dep cycles`.
 
 If the ready set does not match the roots of the staging table, fix the edges now, before the table
 collapses.
@@ -731,6 +739,8 @@ machine-parseable.
   one is never reused.
 - **Beads is authoritative once the tasks exist.** The Task Plan collapses to a mapping and never
   grows a duplicate table.
+- **Every task bead carries acceptance criteria** — checkable, citing spec requirement IDs where
+  they trace. They are what `implement` verifies before closing the bead.
 - **Verify the graph before collapsing the table.** `bd ready` and `bd dep cycles`, against the
   staging table's roots.
 - **A removed task's bead is reported, never closed silently.** Work may already have happened
