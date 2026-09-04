@@ -97,7 +97,9 @@ why `design` writes tier-0 beads self-sufficient.
 ## Landing strategies
 
 Three ways work reaches `main`. The graph's shape picks one; the user can overrule it at the go
-gate, and the project's `AGENTS.md` and `CUSTOMIZE.md` constrain it before either speaks.
+gate. The project's `AGENTS.md` constrains the choice before either speaks, `CUSTOMIZE.md` tunes it
+within those constraints, and a conflict between the two is drift — show the difference and ask,
+never silently pick.
 
 | Strategy | When | Shape |
 | --- | --- | --- |
@@ -283,9 +285,13 @@ statement's trigger, not a stop.
 ### Claim, work, close
 
 ```bash
-bd update <epic> <bead> --claim     # epic included on the run's first claim only
+bd update <epic> <bead> --claim     # epic scope: the epic itself is claimed on the run's first claim
 bd dolt push                        # the claim is visible to the team before the work, not after
 ```
+
+Single-bead scope claims only its bead — the epic stays unclaimed so coworkers are free to take
+siblings — and creates no landed bead; the PR-link comment is the merge trail, the same as a
+standalone bead.
 
 Work happens in git; commits carry the bead ID — `feat: add StageContext type (bd-unz)`.
 
@@ -306,8 +312,8 @@ dependent start the moment its parent's branch is pushed. The merge is tracked s
 ### The landed bead and its gates
 
 An epic cannot be gated directly (`bd gate create` rejects it), and an epic already refuses to
-close while children are open. So the run's first claim also creates one extra child task —
-`Land: all PRs merged to main` — and every PR gets a gate blocking it:
+close while children are open. So an epic run's first claim also creates one extra child task —
+`Land: all PRs merged to main` — with gates blocking it:
 
 ```bash
 bd gate create --type=gh:pr --blocks <land-bead> --await-id=<pr-number> -r "PR #<n>"
@@ -317,6 +323,12 @@ bd gate create --type=gh:pr --blocks <land-bead> --await-id=<pr-number> -r "PR #
 and therefore the epic cannot close — until every PR is merged. A later session's `bd gate check`
 clears the gates as merges land, the landed bead closes, and the epic follows. **Epic closed always
 means the code is on `main`.**
+
+**Which PRs get gates depends on the strategy.** A stacked run gates every PR as it opens — each is
+its own landing on `main`. An epic-branch run gates none of its worker PRs: they target the epic
+branch and the root merges them at the wave boundary, so a gate on one would resolve while nothing
+is on `main`. Its one gate is created at integration, for the aggregate PR — the only landing that
+matters.
 
 A standalone bead gets no gate; its PR link in the comment is the merge trail.
 
@@ -423,14 +435,9 @@ Then read the project's `AGENTS.md` (root and scoped) and `.codefall/skills/impl
 
 ### 2. Fix the scope
 
-Per [One bead or the graph](#one-bead-or-the-graph). With no argument:
-
-```bash
-bd dolt pull && bd gate check
-bd ready
-```
-
-Show the ready set grouped by epic — title, priority, what each unblocks — and ask. Never infer a
+Per [One bead or the graph](#one-bead-or-the-graph). With no argument, run the session-start
+ritual per [Beads](#session-start) — `bd ready` unfiltered, since no epic is chosen yet — then show
+the ready set grouped by epic, with title, priority, and what each unblocks, and ask. Never infer a
 batch from an unprompted ready set; nothing lands unrequested.
 
 ### 3. Read
@@ -448,8 +455,9 @@ per [Landing strategies](#landing-strategies), constrained by `AGENTS.md` and `C
 ### 5. The go gate
 
 Present the block per [The go gate](#the-go-gate) and wait. On go: flip the concept to `Active` if
-one is behind the work, create the epic branch if the strategy calls for one (`epic/<id>-<slug>`
-off `main`, pushed), create the landed bead, claim the epic and the first wave, `bd dolt push`.
+one is behind the work. Epic scope: create the epic branch if the strategy calls for one
+(`epic/<id>-<slug>` off `main`, pushed), create the landed bead, claim the epic and the first wave,
+`bd dolt push`. Single-bead scope: claim the bead, `bd dolt push`, nothing else.
 
 When the user overrules the classifier the same way twice, offer to record the preference in
 `CUSTOMIZE.md` — offer, never write unasked.
@@ -459,9 +467,9 @@ When the user overrules the classifier the same way twice, offer to record the p
 Per wave: render worker prompts, launch the batch, wait for results. Verify each success — branch
 on the remote, PR exists, or it did not happen. One automatic retry per failed bead at higher
 effort; a second failure escalates. File discovered work. Comment the PR link, close the bead with
-what was verified, gate the landed bead with the new PR, `bd dolt push`. `--suggest-next` names the
-next wave; claim it and go again. Epic branch: merge each worker PR into the epic branch,
-serialized, at the wave boundary.
+what was verified, gate the landed bead with the new PR (stacked runs), `bd dolt push`.
+`--suggest-next` names the next wave; claim it and go again. Epic branch: merge each worker PR into
+the epic branch, serialized, at the wave boundary.
 
 Single-bead scope is the same loop with one iteration, run in one worktree.
 
@@ -469,7 +477,8 @@ Single-bead scope is the same loop with one iteration, run in one worktree.
 
 When the frontier is empty: restack stack bottoms onto current `main`, re-run verification, resolve
 nothing silently. Epic branch: open the aggregate PR to `main`, titled as a release-worthy
-conventional commit, `Closes` nothing — the gates own the epic's close.
+conventional commit, and gate the landed bead with it — `Closes` nothing; the gate owns the epic's
+close.
 
 ### 8. Report and stop
 
