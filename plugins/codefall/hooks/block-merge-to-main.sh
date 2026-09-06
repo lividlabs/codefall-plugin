@@ -3,7 +3,7 @@
 #
 # A human performs every merge to main; no codefall verb ever does. A denial from this
 # hook is the system working as designed. Exit 2 blocks the tool call; stderr is shown
-# to the model. Exit 0 allows it.
+# to the model. Exit 0 raises no objection; the normal permission flow still applies.
 #
 # Deliberate limits: this inspects the command string plus, for `gh pr merge`, the PR's
 # actual base branch. It prefers a rare false denial over a false allow, and it is a
