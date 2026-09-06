@@ -106,5 +106,5 @@ enough that a fresh worker could start from it.
 - Never run `bd`. The tracker is the root's; everything you need from it is in this prompt.
 - Never merge anything, and never push `{{BASE_REF}}`, `{{PR_TARGET}}`, or `main`.
 - Never touch the primary checkout or a sibling worktree.
-- Never invoke another codefall verb, and never run project sync rituals — the root did them once.
+- Never invoke another codefall verb.
 - Never expand scope past this bead, and never guess on architecture.
