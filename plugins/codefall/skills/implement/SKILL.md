@@ -282,6 +282,11 @@ A project with no Dolt remote works identically; state is this-machine-only, and
 once rather than treating it as an error. `bd dolt pull` failing for lack of a remote is that
 statement's trigger, not a stop.
 
+`bd gate check` fails the same way — safely. With `gh` missing, unauthenticated, or no GitHub
+remote, every gate stays open and the command reports per-gate errors and still exits 0: a report,
+not a stop, and never a falsely resolved gate. An `ESCALATE` line is different — the gate was
+checked and its PR is missing — and is surfaced to the user rather than skimmed past.
+
 ### Claim, work, close
 
 ```bash
