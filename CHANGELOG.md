@@ -6,6 +6,28 @@ below were written by hand, before that was wired up.
 Tags are bare version numbers (`0.1.2`), not `v`-prefixed, so they match the `ref` the marketplace
 pins. A `v0.1.1` tag also exists from before that convention was settled.
 
+## [0.7.0](https://github.com/lividlabs/codefall-plugin/compare/v0.6.0...v0.7.0) (2026-09-09)
+
+
+### Features
+
+* add the design skill ([#48](https://github.com/lividlabs/codefall-plugin/issues/48)) ([188cf29](https://github.com/lividlabs/codefall-plugin/commit/188cf298535f1b6487c6547696c07271c794d8e3))
+* add the implement skill ([#49](https://github.com/lividlabs/codefall-plugin/issues/49)) ([12722c2](https://github.com/lividlabs/codefall-plugin/commit/12722c22d3adcf41145180824e70021f1c86503a))
+* add the mock-up skill ([#45](https://github.com/lividlabs/codefall-plugin/issues/45)) ([d7d5d3b](https://github.com/lividlabs/codefall-plugin/commit/d7d5d3baf3d8d5d2fe30b63504d62068bd24a55b))
+* **conceptualize:** take whatever the user arrived with ([#47](https://github.com/lividlabs/codefall-plugin/issues/47)) ([e33b31f](https://github.com/lividlabs/codefall-plugin/commit/e33b31f235f865aaa7810144b7877c253306c63c))
+* **skills:** resolve plugin paths from the skill's own directory ([#53](https://github.com/lividlabs/codefall-plugin/issues/53)) ([0b993b8](https://github.com/lividlabs/codefall-plugin/commit/0b993b8b0cabbe3949073b4b028b21b62b7a5c95))
+
+
+### Bug Fixes
+
+* **hooks:** correct the exit-0 comment in the merge guard ([#51](https://github.com/lividlabs/codefall-plugin/issues/51)) ([810e63b](https://github.com/lividlabs/codefall-plugin/commit/810e63b128e33e44f194ecfbb33022b1dc3ff6f9))
+* **implement:** reconcile the skill with its decided contracts ([#50](https://github.com/lividlabs/codefall-plugin/issues/50)) ([5c4b958](https://github.com/lividlabs/codefall-plugin/commit/5c4b9582097b6b34ae8c7552893653f589b7bdf5))
+
+
+### Documentation
+
+* **implement:** record bd gate check's verified failure behavior ([#52](https://github.com/lividlabs/codefall-plugin/issues/52)) ([8f116f7](https://github.com/lividlabs/codefall-plugin/commit/8f116f782af7a722c67080f2bc11d27875a9e39f))
+
 ## [0.6.0](https://github.com/lividlabs/codefall-plugin/compare/v0.5.0...v0.6.0) (2026-08-28)
 
 
