@@ -56,8 +56,9 @@ See [Key entities](#key-entities).
 would this change silently break? Reading code to decide *how* to build the thing is `design`'s job
 and is out of bounds here, even when the answer seems obvious.
 
-Paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}`. Resolve them against that root — they
-are not relative to the user's project.
+Plugin paths in this document — `trackers/…` and the ones that start with `../` — are relative to
+this skill's directory, the one holding this `SKILL.md`. Resolve them from where the file lives;
+they are not relative to the user's project.
 
 ## What a specification is
 
@@ -455,16 +456,17 @@ considered it and disagreed, the matter is closed and nothing goes in the docume
 
 ## Project customizations
 
-Follow `shared/customizations.md` for this verb.
+Follow `../../shared/customizations.md` for this verb.
 
 ## Process
 
 ### 1. Check preconditions
 
-Run the shared check against the user's project. It reports what is set up and repairs nothing.
+Run the shared check against the user's project — the script's path resolves from this skill's
+directory, and the argument is the project. It reports what is set up and repairs nothing.
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/shared/preflight.sh" .
+"../../shared/preflight.sh" .
 ```
 
 `beads=ok` advances to step 2. Otherwise read `beads_reason`, tell the user what is missing, hand
@@ -627,8 +629,9 @@ other, say so once and offer the split.
 
 When the feature has a visual surface, ask whether a mockup exists.
 
-**If the user has one**, import it — follow `shared/import-mockup.md`. The imported files land under
-`docs/mockups/<slug>/`, keyed by surface, and the spec references that path under **Design notes**.
+**If the user has one**, import it — follow `../../shared/import-mockup.md`. The imported files land
+under `docs/mockups/<slug>/`, keyed by surface, and the spec references that path under **Design
+notes**.
 
 **If the user wants one but does not have it**, or has no design tool, the specification proceeds
 without it and the tracker issue is marked `requires-mockup`. `design` refuses to act on an issue
@@ -718,9 +721,9 @@ profile** — one directory per tracker, exactly as `scaffold` handles surfaces.
 | `jira` | Jira Cloud and Data Center | planned |
 | `linear` | Linear | planned |
 
-A tracker is **supported** only when `skills/specify/trackers/<name>/PROFILE.md` is complete. Nothing
-else counts. A planned profile is an exit, not a menu choice — if the user's tracker is Jira, say
-plainly that `specify` does not mirror to it yet and stop.
+A tracker is **supported** only when `trackers/<name>/PROFILE.md` is complete. Nothing else
+counts. A planned profile is an exit, not a menu choice — if the user's tracker is Jira, say plainly
+that `specify` does not mirror to it yet and stop.
 
 **Resolution.** GitHub is currently the only supported profile, so there is no question to ask. State
 that the mirror will land in GitHub Issues and confirm the repository. When more profiles exist, this

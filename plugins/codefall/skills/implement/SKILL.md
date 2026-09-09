@@ -24,8 +24,9 @@ performs every merge to `main`, and this skill never does**, in any mode, under 
 short of the user editing this file. Merges into an epic branch are the one exception, because the
 epic branch exists to fan work back in and the human gate sits at its aggregate PR.
 
-Paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}`. Resolve them against that root — they
-are not relative to the user's project.
+Plugin paths in this document — the ones that start with `../` — are relative to this skill's
+directory, the one holding this `SKILL.md`. Resolve them from where the file lives; they are not
+relative to the user's project.
 
 ## Scope — build, not decide
 
@@ -414,14 +415,17 @@ awaiting merge, and everything above follows the normal sequence.
 
 ## Project customizations
 
-Follow `shared/customizations.md` for this verb.
+Follow `../../shared/customizations.md` for this verb.
 
 ## Process
 
 ### 1. Check preconditions
 
+Run the shared check against the user's project — the script's path resolves from this skill's
+directory, and the argument is the project.
+
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/shared/preflight.sh" .
+"../../shared/preflight.sh" .
 ```
 
 `beads=ok` advances. Otherwise read `beads_reason`, tell the user what is missing, hand over the

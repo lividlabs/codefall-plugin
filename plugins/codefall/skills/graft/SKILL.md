@@ -30,10 +30,10 @@ an empty directory, but graft runs on a project people depend on. Never suggest 
 from a passing remark, never chain into it from another skill. Someone types `/graft` on purpose or
 it does not run.
 
-Template paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}/skills/scaffold/templates/`
-— graft reasons about `scaffold`'s templates; it has none of its own. Its one bundled reference is
-`${CLAUDE_PLUGIN_ROOT}/skills/graft/lineage.md`, the record of what every current template used to
-be called.
+Template paths in this document are relative to `../scaffold/templates/`, resolved from this skill's
+directory — the one holding this `SKILL.md` — because graft reasons about `scaffold`'s templates and
+has none of its own. Its one bundled reference is `lineage.md` beside this file, the record of what
+every current template used to be called. Neither path is relative to the user's project.
 
 ## Scope — documents, not code
 
@@ -91,10 +91,11 @@ existed, and there the answer is a ladder — take the first rung that works:
 
 1. **The local plugin cache** — `~/.claude/plugins/cache/<marketplace>/codefall/<version>/`. Exact
    snapshots, offline, but only of versions this machine actually installed.
-2. **Git history** — if `${CLAUDE_PLUGIN_ROOT}` sits inside a clone that can reach the release tag,
-   `git show <tag>:<path>` works. Installed marketplace clones are usually **shallow** with few or
-   no tags, so try `git fetch --depth=1 origin tag <tag>` before concluding the tag is missing.
-   Tags come in two forms and old paths differ from current ones — `lineage.md` records both.
+2. **Git history** — if the plugin root, two levels up from this skill's directory, sits inside a
+   clone that can reach the release tag, `git show <tag>:<path>` works. Installed marketplace
+   clones are usually **shallow** with few or no tags, so try `git fetch --depth=1 origin tag <tag>`
+   before concluding the tag is missing. Tags come in two forms and old paths differ from current
+   ones — `lineage.md` records both.
 3. **GitHub** — `gh api repos/lividlabs/codefall-plugin/contents/<historical-path>?ref=<tag>`,
    or the raw URL. Needs network.
 4. **Nowhere** — then the file is **unverifiable**. Say so and treat it as edited.
@@ -239,10 +240,10 @@ the record here — the documents are.
   touches two files: add an entry for the successor, which is what future runs compare against,
   and recompute the superseded file's hash after its Status flip. Add
   `"lastGraft": { "pluginVersion": "<version>", "date": "<date>" }` at the top level, reading the
-  version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — do not guess it. Where the file
-  didn't exist, write it fresh: this plugin version, today's date, the profiles and decisions as
-  established, and an `amended` per ADR — `false` only for files that now hash-match a
-  current template, `true` for anything kept that differs.
+  version from `../../.claude-plugin/plugin.json` — do not guess it. Where the file didn't exist,
+  write it fresh: this plugin version, today's date, the profiles and decisions as established, and
+  an `amended` per ADR — `false` only for files that now hash-match a current template, `true` for
+  anything kept that differs.
 - **`docs/decision-log.md`** — one line under `Locked`: *grafted codefall `<version>` on `<date>` —
   took ADR-BASE-03, ADR-TS-01; left ADR-TS-02 (amended)*. Humans read this; `scaffold.json` stays
   authoritative.

@@ -26,8 +26,9 @@ The output is `docs/mockups/<slug>/` — the files, and a `README.md` saying wha
 This skill runs before or after `specify`, and neither order is wrong. A mockup can be what makes the
 requirements obvious, or it can be drawn once they are settled.
 
-Paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}`. Resolve them against that root — they
-are not relative to the user's project.
+Plugin paths in this document — the ones that start with `../` — are relative to this skill's
+directory, the one holding this `SKILL.md`. Resolve them from where the file lives; they are not
+relative to the user's project.
 
 ## What it decides, and what it leaves alone
 
@@ -47,7 +48,7 @@ this skill produces.
 
 | The user has | Mode |
 | --- | --- |
-| Exported files, a directory of them, a design-tool URL, or an image pasted into the conversation | **Import** — follow `shared/import-mockup.md` |
+| Exported files, a directory of them, a design-tool URL, or an image pasted into the conversation | **Import** — follow `../../shared/import-mockup.md` |
 | Nothing, or only part of what they need | **Make it** |
 | A mockup already in `docs/mockups/<slug>/` that needs another state | **Amend** — add a file, never redraw the set |
 
@@ -57,9 +58,9 @@ meantime, make it.
 
 ### Import
 
-`shared/import-mockup.md` is the whole procedure, and it is shared with `specify` so the two never
-drift. Follow it as written: what to accept, where the files land, the `README.md`, and the rules
-about never editing or interpreting what the user brought. Then go to
+`../../shared/import-mockup.md` is the whole procedure, and it is shared with `specify` so the two
+never drift. Follow it as written: what to accept, where the files land, the `README.md`, and the
+rules about never editing or interpreting what the user brought. Then go to
 [step 8](#8-clear-the-requires-mockup-label).
 
 ## Where mockups live
@@ -79,8 +80,8 @@ it has one; adding a state to a surface that has a directory is an amendment to 
 ### The directory's rules file
 
 `docs/mockups/AGENTS.md` is written when the directory is created, and added on a later run if it is
-missing. `shared/import-mockup.md` writes the same file, so a directory reached from either verb
-carries it.
+missing. `../../shared/import-mockup.md` writes the same file, so a directory reached from either
+verb carries it.
 
 **Never overwrite a file that has drifted.** When one exists and its content differs from what this
 skill ships, show the user the difference and ask. The difference is a hand edit until they say
@@ -204,7 +205,7 @@ asset** — make the missing state alongside it.
 
 ## Project customizations
 
-Follow `shared/customizations.md` for this verb.
+Follow `../../shared/customizations.md` for this verb.
 
 ## Process
 
@@ -300,9 +301,9 @@ Do not commit.
 
 ### 8. Clear the `requires-mockup` label
 
-Follow the **Hand back** section of `shared/import-mockup.md` — it works the same for a mockup made
-here as for an imported one. `specify` applies the label per requirement, so clear the issues this
-mockup covers, leave the rest, and clear none of them unless files actually landed.
+Follow the **Hand back** section of `../../shared/import-mockup.md` — it works the same for a mockup
+made here as for an imported one. `specify` applies the label per requirement, so clear the issues
+this mockup covers, leave the rest, and clear none of them unless files actually landed.
 
 ### 9. Link it back
 

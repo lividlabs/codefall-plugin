@@ -27,8 +27,9 @@ answer — and it stops well short of the detail a specification needs.
 Conceptualizing is not specifying. The moment the document starts saying what a user will observe
 when the thing works, it has become `specify`'s job. See [The specify off-ramp](#the-specify-off-ramp).
 
-Paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}`. Resolve them against that root — they
-are not relative to the user's project.
+Plugin paths in this document — the ones that start with `../` — are relative to this skill's
+directory, the one holding this `SKILL.md`. Resolve them from where the file lives; they are not
+relative to the user's project.
 
 ## Scope — why, not what
 
@@ -272,11 +273,11 @@ Two destinations, decided by what the material is rather than by how it arrived.
 
 | Material | Where |
 | --- | --- |
-| A picture of a surface someone will build — exports, screenshots of a design tool, a mockup set | `docs/mockups/<slug>/`, following `shared/import-mockup.md` |
+| A picture of a surface someone will build — exports, screenshots of a design tool, a mockup set | `docs/mockups/<slug>/`, following `../../shared/import-mockup.md` |
 | Everything else — notes, transcripts, vision documents, sketches of the problem, a diagram of how something works today | `docs/concepts/sources/CONCEPT-NNN-<original-filename>` |
 
 Mockups go to `docs/mockups/` because that is where `design` and `implement` look for them, and
-because a surface outlives the concept that prompted it. `shared/import-mockup.md` is the same
+because a surface outlives the concept that prompted it. `../../shared/import-mockup.md` is the same
 procedure `specify` and `mock-up` use, so the three never drift — follow it as written, including its
 rules about never editing or interpreting what the user brought.
 
@@ -305,7 +306,7 @@ When what they brought is a written document, one of two things happens:
 
 ## Project customizations
 
-Follow `shared/customizations.md` for this verb.
+Follow `../../shared/customizations.md` for this verb.
 
 ## Process
 
