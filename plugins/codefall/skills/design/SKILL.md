@@ -30,8 +30,9 @@ else. The document is scaled to the work, and the work decides the tier — see
 
 Designing is not implementing. Once the document is written and the graph exists, stop.
 
-Paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}`. Resolve them against that root — they
-are not relative to the user's project.
+Plugin paths in this document — the ones that start with `../` — are relative to this skill's
+directory, the one holding this `SKILL.md`. Resolve them from where the file lives; they are not
+relative to the user's project.
 
 ## Scope — how, not what and not whether
 
@@ -247,7 +248,7 @@ bead.
 
 An ADR is a separate artifact, `docs/adrs/ADR-NNN-title.md`, in the classic Nygard shape the project
 already uses — Status, Context, Decision, Consequences, Related. Write it from
-`skills/scaffold/templates/adrs/_TEMPLATE.md`.
+`../scaffold/templates/adrs/_TEMPLATE.md`.
 
 **The number continues the project's own sequence.** Read `docs/adrs/`, take the highest bare
 `ADR-NNN` plus one, starting at `ADR-001`. The prefixed sequences — `ADR-BASE-NN` from the
@@ -486,16 +487,17 @@ Say per row which you did and why, in the report.
 
 ## Project customizations
 
-Follow `shared/customizations.md` for this verb.
+Follow `../../shared/customizations.md` for this verb.
 
 ## Process
 
 ### 1. Check preconditions
 
-Run the shared check against the user's project. It reports what is set up and repairs nothing.
+Run the shared check against the user's project — the script's path resolves from this skill's
+directory, and the argument is the project. It reports what is set up and repairs nothing.
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/shared/preflight.sh" .
+"../../shared/preflight.sh" .
 ```
 
 `beads=ok` advances to step 2. Otherwise read `beads_reason`, tell the user what is missing, hand
@@ -538,7 +540,7 @@ profile:
   not designable, which is why the label exists.
 
 Read the status from the document. Read the labels from the tracker per
-`skills/specify/trackers/<name>/PROFILE.md`. If the tracker is unreachable, say so and ask the user
+`../specify/trackers/<name>/PROFILE.md`. If the tracker is unreachable, say so and ask the user
 whether the mockups exist rather than guessing.
 
 Name the gate, say what clears it, and stop. Do not design half of a spec around a blocked

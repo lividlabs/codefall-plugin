@@ -62,8 +62,9 @@ information is not the same as not needing the information — it is this skill'
 it is why step 1 will not run without a concept. Most of the questions are answered before the session
 starts, so there are fewer of them and the answers are better.
 
-Template paths in this document are relative to `${CLAUDE_PLUGIN_ROOT}/skills/scaffold/templates/`.
-Resolve them against that root — they are not relative to the user's project.
+Plugin paths in this document — `templates/…` and the ones that start with `../` — are relative to
+this skill's directory, the one holding this `SKILL.md`. Resolve them from where the file lives;
+they are not relative to the user's project.
 
 ## The stance
 
@@ -457,7 +458,7 @@ Anything else in the directory still gets the warning.
   }
   ```
 
-  Read `pluginVersion` from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — do not guess it.
+  Read `pluginVersion` from `../../.claude-plugin/plugin.json` — do not guess it.
   `shape` is one of `one-cohesive-domain`, `several-capabilities`, `unclear`; `depth` is
   `docs-only`, `project-files`, or `runnable-skeleton`; `topology` has one entry per React surface
   and is omitted where a profile has no topologies.
