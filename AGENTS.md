@@ -31,6 +31,11 @@ never restates the reasoning.
 - Every verb reads `.codefall/skills/<verb>/CUSTOMIZE.md` from the user's project when it exists —
   project procedure the plugin cannot know. The procedure lives in
   `plugins/codefall/shared/customizations.md`; a skill points at it and never restates it.
+- Plugin paths inside a skill are relative to the skill's own directory — `../../shared/…`,
+  `../scaffold/templates/…`, `../../.claude-plugin/plugin.json` — never `${CLAUDE_PLUGIN_ROOT}`.
+  Harnesses that mirror the tree under `.agents/skills/` do not define that variable, and the
+  relative form resolves under them and under Claude Code alike. `hooks/hooks.json` is the
+  exception: hooks run only under Claude Code.
 - **Whose document is it** decides who repairs it. A file the plugin ships that nobody amends — the
   operative rules a verb installs alongside a directory it owns, like `docs/concepts/AGENTS.md` — is
   repaired by the verb that owns it, on run. A template that becomes the project's own document, one
